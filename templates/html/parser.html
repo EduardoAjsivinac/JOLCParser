@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <div class="spaced">
+        <div style="height: 75vh;" class="row">
+            <textarea class="h-100 col d-inline-block" placeholder="Input" id="floatingTextarea1"></textarea>
+            <div class="h-100 col d-inline-block">
+                <textarea class="h-50 w-100 d-inline-block" placeholder="Console Output" id="floatingTextarea2" ></textarea>
+                <div class="table-responsive h-50 w-100 d-inline-block">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Linea</th>
+                            <th scope="col">Columna</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>  
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="spaced">
+            <center>
+                <button type="button" class="btn btn-primary">Analizar</button>
+            </center>
+        </div>
+    </div>
+
+{% endblock %}

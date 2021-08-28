@@ -38,7 +38,10 @@
     </div>
     <div class="card">
       <div class="spaced" style="height: 300px;">
-        <img src="..." class="card-img-top" alt="...">
+        
+        <center>
+          <img src={{ url_for('static', filename = "images/tree.svg")}} style="height: 300px;" />
+        </center>
         </div>
       <div class="card-body">
         <h5 class="card-title">Árbol de análisis sintáctico</h5>
@@ -47,7 +50,7 @@
       </div>
       <div class="card-footer">
         <center>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tablaSimbolos">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#arbol">
               Mostrar reporte        
           </button>
       </center>
@@ -83,20 +86,30 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            ...<br/>
-            ...<br/>
-            ...<br/>
-            ...<br/>
-            ...<br/>
-            ...<br/>
-            ...<br/>
-            ...<br/>
-            ...<br/>
-          
+            
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <a href="/getSVGImage" class="btn btn-primary">Descargar Imagen</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Modal Arbol-->
+  <div class="modal fade" id="arbol" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Árbol de análisis sintáctico</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <img src={{ url_for('static', filename = "images/tree.svg")}} style="height: 100%;" />
+            
+        </div>
+        <div class="modal-footer">
+          <a href="/getSVGImage" class="btn btn-primary">Descargar Imagen</a>
         </div>
       </div>
     </div>

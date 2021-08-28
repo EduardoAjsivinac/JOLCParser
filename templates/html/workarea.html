@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <form action="/parse" method="POST">
+    <div class="spaced">
+        <div style="height: 75vh;" class="row">
+            <textarea class="h-100 col d-inline-block" placeholder="Input" id="inputtext" name="inputtext"></textarea>
+            <div class="h-100 col d-inline-block">
+                <textarea class="h-50 w-100 d-inline-block" placeholder="Console Output" id="outputconsole" name="outputconsole" disabled readonly></textarea>
+                <div class="table-responsive h-50 w-100 d-inline-block">
+                    <table class="table" id="tablaErrores" name = "tablaErrores">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Linea</th>
+                            <th scope="col">Columna</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="spaced">
+            <center>
+                <button type="button" class="btn btn-primary" id="Enviar" name="Enviar"/>Analizar</button>
+            </center>
+        </div>
+    </div>
+</form>
+<script>
+    $("#Enviar").click(function(e) {
+    e.preventDefault();
+    var entrada = document.getElementById("inputtext").value;
+    var settings = {
+        "url": "/parse",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "data": JSON.stringify({
+            "entrada": entrada
+        }),
+        };
+        $.ajax(settings).done(function (response) {
+            document.getElementById("outputconsole").value = response.data
+            $('#tablaErrores tbody').empty()
+            texto = ""
+            response.errores.forEach((value, i)=>{
+                texto+="<tr>"
+                texto+="<td>" + parseInt(i+1,10) + "</td>"
+                texto+="<td>" + value.descripcion + "</td>"
+                texto+="<td>" + parseInt(value.linea,10)+ "</td>"
+                texto+="<td>" + parseInt(value.columna,10)+ "</td>"
+                texto+="</tr>"
+            });
+            $('#tablaErrores tbody').append(texto)
+        });
+});
+</script>
+{% endblock %}

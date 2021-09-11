@@ -15,6 +15,8 @@ app = Flask(__name__)
 global analizo
 analizo = False
 dotresult = ""
+tabla_simbolos = []
+
 
 @app.route('/')
 def home():
@@ -28,14 +30,17 @@ def workarea():
 def parser():
     global analizo
     global dotresult
+    global tabla_simbolos
     analizo = True
     entrada = request.json['entrada']
     resultado = run_method(entrada)
-    nuevoEntorno = Entorno()
+    nuevoEntorno = Entorno("general")
     resultado.execute(nuevoEntorno)
+    dotresult = "digraph G {" + resultado.getdot()+ "}"
+    #tabla_simbolos = nuevoEntorno.getTable().simbolos
     dataresult={
         "errores": nuevoEntorno.pilaErrores,
-        "data": resultado.valor
+        "data": nuevoEntorno.consolaSalida
     }
     return dataresult
 
@@ -43,8 +48,10 @@ def parser():
 def reports():
     global analizo
     global dotresult
+    global tabla_simbolos
     if (analizo):
         conn = http.client.HTTPSConnection("quickchart.io")
+        print(dotresult)
         payload = json.dumps({
             "graph": dotresult,
             "layout": "dot",
@@ -59,7 +66,9 @@ def reports():
         f = open("static/images/tree.svg","w")
         f.write(data.decode("utf-8"))
         f.close()
-        return render_template('html/reports.html', project_name = "JOLC Parser")
+        for x in tabla_simbolos:
+            print(tabla_simbolos[x].value)
+        return render_template('html/reports.html', project_name = "JOLC Parser", tabla_simbolos = tabla_simbolos)
     return redirect(url_for('workarea'))
 
 @app.route("/getSVGImage")

@@ -8,12 +8,14 @@ class TerminalIdentificador(Nodo):
         
 
     def execute(self, enviroment):
-        simbolo = enviroment.getTable().simbolos.get(self.valor)
-        print(simbolo)
+        simbolo = enviroment.findSymbol(self.texto)
         if (simbolo != None):
-            self.valor = simbolo.value
-            self.tipo = simbolo.type
+            self.valor = simbolo["valor"]
+            self.tipo = simbolo["tipo"]
+            self.identifierDeclare = True
+            self.isIdentifier = True
         else:
+            self.isIdentifier = True
             self.valor = None
             self.tipo = DataType.nothing
 

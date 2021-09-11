@@ -4,7 +4,7 @@ import sys
 sys.setrecursionlimit(5000)
 class Nodo(metaclass=ABCMeta):
 
-    def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo = 1):
+    def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo = None):
         self.id_nodo = id_nodo
         self.valor = valor
         self.fila = fila
@@ -12,6 +12,8 @@ class Nodo(metaclass=ABCMeta):
         self.hijos = []
         self.tipo = tipo
         self.texto = texto
+        self.isIdentifier = False
+        self.identifierDeclare = False #Bandera para saber si está declarado el identificador antes o si es un identificador con valor Nothing
 
     def getid(self):
         return str(self.id_nodo)

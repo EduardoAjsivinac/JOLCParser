@@ -1,3 +1,6 @@
+from parser.GrammarNodes.Expresion.Nativas import *
+from parser.GrammarNodes.Expresion.ListaExpresion import NodeListaExpresiones
+from parser.GrammarNodes.Instrucciones import *
 from parser.GrammarNodes.Expresion.Aritmeticas.NodeModulo import NodeModulo
 from parser.GrammarNodes.Expresion.Logicas import *
 from parser.GrammarNodes.Terminales import *
@@ -21,20 +24,74 @@ global noNode
 #region Léxico
 
 reserved = {
+    'println' : 'PRINTLN',
+    'print' : 'PRINT',
+    'Nothing' : 'NOTHING',
+    'Int64' : 'INT64',
+    'Float64' : 'FLOAT64',
+    'Bool' : 'BOOL',
+    'Char' : 'CHAR',
+    'String' : 'STRING',
+    'true' : 'TRUE',
+    'false' : 'FALSE',
+    'function' : 'FUNCTION',
+    'end' : 'END',
     'if' : 'IF',
-    'then' : 'THEN',
+    'elseif' : 'ELSEIF',
     'else' : 'ELSE',
-    'while' : 'WHILE'
+    'while' : 'WHILE',
+    'for' : 'FOR',
+    'in' : 'IN',
+    'uppercase' : 'UPPERCASE',
+    'lowercase' : 'LOWERCASE',
+    'log10' : 'LOG10',
+    'log' : 'LOG',
+    'sin' : 'SIN',
+    'cos' : 'COS',
+    'tan' : 'TAN',
+    'sqrt' : 'SQRT',
+    'parse' : 'PARSE',
+    'trunc' : 'TRUNC',
+    'float' : 'FLOAT',
+    'string' : 'FSTR',
+    'typeof' : 'TYPEOF'
  }
 
 tokens  = (
+    'PRINTLN',
+    'PRINT',
+    'NOTHING',
+    'INT64',
+    'FLOAT64',
+    'BOOL',
+    'CHAR',
+    'STRING',
+    'FUNCTION',
+    'END',
+    'IF',
+    'ELSEIF',
+    'ELSE',
+    'WHILE',
+    'FOR',
+    'IN',
+    'UPPERCASE',
+    'LOG10',
+    'LOG',
+    'SIN',
+    'COS',
+    'TAN',
+    'SQRT',
+    'PARSE',
+    'TRUNC',
+    'FLOAT',
+    'FSTR',
+    'TYPEOF',
     # Expresiones regulares
     'IDENTIFICADOR',
     'DECIMAL',
     'ENTERO',
     'CADENA',
-    'CHAR',
-
+    'LOWERCASE',
     # Palabras reservadas
     'TRUE',
     'FALSE',
@@ -58,10 +115,43 @@ tokens  = (
     'PARIZQ',
     'PARDER',
     'DOSPTS',
-    'PTCOMA'
+    'PTCOMA',
+    'COMA'
 )
 
 # Tokens
+
+t_PRINTLN   = r'println'
+t_PRINT     = r'print'
+t_FUNCTION  = r'function'
+t_END       = r'end'
+t_IF        = r'if'
+t_ELSEIF    = r'elseif'
+t_ELSE      = r'else'
+t_WHILE     = r'while'
+t_FOR       = r'for'
+t_IN        = r'in'
+t_UPPERCASE = r'uppercase'
+t_LOWERCASE = r'lowercase'
+t_LOG10     = r'log10'
+t_LOG       = r'log'
+t_SIN       = r'sin'
+t_COS       = r'cos'
+t_TAN       = r'tan'
+t_SQRT      = r'sqrt'
+t_PARSE     = r'parse'
+t_TRUNC     = r'trunc'
+t_FLOAT     = r'float'
+t_FSTR      = r'FSTR'
+t_TYPEOF    = r'TYPEOF'
+
+t_NOTHING   = r'Nothing'
+t_INT64     = r'Int64'
+t_FLOAT64   = r'Float64'
+t_BOOL      = r'Bool'
+t_CHAR      = r'Char'
+t_STRING    = r'String'
+
 t_TRUE      = r'true'
 t_FALSE     = r'false'
 t_PARIZQ    = r'\('
@@ -82,6 +172,7 @@ t_DIFIGUAL  = r'!='
 t_DIFERENTE = r'!'
 t_PTCOMA    = r';'
 t_DOSPTS    = r':'
+t_COMA    = r','
 
 def t_DECIMAL(t):
     r'\d+\.\d+'
@@ -114,11 +205,17 @@ def t_IDENTIFICADOR(t):
 
 def t_newline(t):
     r'\n+'
-    t.lexer.lineno += t.value.count("\n")
-    
+    t.lexer.lineno += len(t.value)
+
+def find_column(inp, token):
+    line_start = inp.rfind('\n', 0, token.lexpos) + 1
+    return (token.lexpos - line_start) + 1
+
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
+
+t_ignore = " \t"
     
 # Construyendo el analizador léxico
 import ply.lex as lex
@@ -149,16 +246,424 @@ precedence = (
 #endregion
 
 # Definición de la gramática
-def p_instrucciones_lista(t):
-    '''instrucciones    : instruccion '''
+#region Instrucciones
+#region ListaInstrucciones
+def p_lista_instrucciones_simplea(t):
+    '''instrucciones    : instrucciones instruccion '''
     t[0]=t[1]
-                        
+    t[0].addChild(t[2])
 
-def p_instrucciones_evaluar(t):
-    'instruccion : expresion'
+def p_lista_instrucciones_complejas(t):
+    '''instrucciones    : instrucciones instruccion_funcion '''
+    t[0]=t[1]
+    t[0].addChild(t[2])
+
+
+def p_instruccion_simple(t):
+    '''instrucciones    : instruccion '''
+    t[0]=GenericoInstruccion(None,getNoNode(),"Instrucciones")
+    t[0].addChild(t[1])
+
+def p_instruccion_compleja(t):
+    '''instrucciones    : instruccion_funcion '''
+    t[0]=GenericoInstruccion(None,getNoNode(),"Instrucciones")
+    t[0].addChild(t[1])
+#endregion
+
+#region Tipos
+def p_tipo_nothing(t):
+    'tipo : NOTHING'
+    t[0] = NodeTipo(None,getNoNode(),t[1],t.lineno(1), find_column(input, t.slice[1]), DataType.nothing)
+
+def p_tipo_int64(t):
+    'tipo : INT64'
+    t[0] = NodeTipo(None,getNoNode(),t[1],t.lineno(1), find_column(input, t.slice[1]), DataType.int64)
+
+def p_tipo_float64(t):
+    'tipo : FLOAT64'
+    t[0] = NodeTipo(None,getNoNode(),t[1],t.lineno(1), find_column(input, t.slice[1]), DataType.float64)
+
+def p_tipo_bool(t):
+    'tipo : BOOL'
+    t[0] = NodeTipo(None,getNoNode(),t[1],t.lineno(1), find_column(input, t.slice[1]), DataType.bool)
+    
+def p_tipo_char(t):
+    'tipo : CHAR'
+    t[0] = NodeTipo(None,getNoNode(),t[1],t.lineno(1), find_column(input, t.slice[1]), DataType.char)
+
+def p_tipo_string(t):
+    'tipo : STRING'
+    t[0] = NodeTipo(None,getNoNode(),t[1],t.lineno(1), find_column(input, t.slice[1]), DataType.string)
+    
+#endregion
+
+#region Lista identificadores
+def p_lista_ids(t):
+    'lista_ids : lista_ids COMA IDENTIFICADOR'
+    t[0]=t[1]
+    t[0].addChild(GenericoExpresion(None,getNoNode(),","))
+    t[0].addChild(TerminalIdentificador(t[3],getNoNode(),t[3], t.lineno(3), find_column(input, t.slice[3]), DataType.nothing))
+
+def p_lista_id(t):
+    'lista_ids : IDENTIFICADOR'
+    t[0] = ListaIdentificadores(None,getNoNode(),"Lista Identificadores")
+    t[0].addChild(TerminalIdentificador(t[1],getNoNode(),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.nothing))
+#endregion
+
+#region Instrucciones Complejas
+def p_instruccion_funcion(t):
+    'instruccion_funcion : instruccion_crea_funcion PTCOMA'
+    t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+#endregion
+
+#region Instruccion Crear Función
+def p_instruccion_crea_funcion_sin_parametros(t):
+    'instruccion_crea_funcion : FUNCTION IDENTIFICADOR PARIZQ PARDER cuerpo_funcion END'
+    t[0] = InstruccionCrearFuncion(None, getNoNode(),"Function")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"function"))
+    t[0].addChild(TerminalIdentificador(t[2],getNoNode(),t[2], t.lineno(1), find_column(input, t.slice[1]), DataType.nothing))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"("))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")"))
+    t[0].addChild(t[5])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"end"))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+
+def p_instruccion_crea_funcion_con_parametros(t):
+    'instruccion_crea_funcion : FUNCTION IDENTIFICADOR PARIZQ lista_parametros PARDER cuerpo_funcion END'
+    t[0] = InstruccionCrearFuncionParametros(None, getNoNode(),"Function")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"function"))
+    t[0].addChild(TerminalIdentificador(t[2],getNoNode(),t[2], t.lineno(1), find_column(input, t.slice[1]), DataType.nothing))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"("))
+    t[0].addChild(t[4])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")"))
+    t[0].addChild(t[6])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"end"))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+
+def p_lista_parametros(t):
+    'lista_parametros : lista_parametros COMA parametro'
     t[0] = t[1]
+    t[0].addChild(GenericoExpresion(None,getNoNode(),","))
+    t[0].addChild(t[3])
+
+def p_lista_parametro(t):
+    'lista_parametros : parametro'
+    t[0] = ListaParametros(None,getNoNode(),"Lista Parametros")
+    t[0].addChild(t[1])
+
+def p_parametro_tipo(t):
+    'parametro : IDENTIFICADOR DOSPTS DOSPTS tipo'
+    t[0] = Parametro(None, getNoNode(),"Parametro")
+    t[0].addChild(TerminalIdentificador(t[1],getNoNode(),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.nothing))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"::"))
+    t[0].addChild(t[4])
+
+def p_parametro(t):
+    'parametro : IDENTIFICADOR'
+    t[0] = Parametro(None, getNoNode(),"Parametro")
+    t[0].addChild(TerminalIdentificador(t[1],getNoNode(),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.generic)) #se agrega tipo de dato generic 
+
+def p_cuerpo_funciones(t):
+    'cuerpo_funcion : cuerpo_funcion instruccion'
+    t[0]=t[1]
+    t[0].addChild(t[2])
+
+def p_cuerpo_funcion(t):
+    'cuerpo_funcion : instruccion'
+    t[0]=GenericoInstruccion(None,getNoNode(),"Instrucciones")
+    t[0].addChild(t[1])
+
+#endregion
+
+#region Instrucciones Simples
+def p_instruccion_imprimir(t):
+    'instruccion : imprimir PTCOMA'
+    t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+
+def p_instruccion_asignacion_declaracion(t):
+    'instruccion : asignacion_declaracion PTCOMA'
+    t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+
+def p_instruccion_llamada_funcion(t):
+    'instruccion : llamada_funcion PTCOMA'
+    t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+
+def p_instruccion_instruccion_if(t):
+    'instruccion : instruccion_if PTCOMA'
+    t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+
+def p_instruccion_instruccion_while(t):
+    'instruccion : instruccion_while PTCOMA'
+    t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+
+def p_instruccion_instruccion_while(t):
+    'instruccion : instruccion_for PTCOMA'
+    t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+#endregion
+
+#region Instruccion If
+def p_instruccion_if(t):
+    'instruccion_if : IF expresion cuerpo_funcion else_if_else END'
+    t[0] = InstruccionIf(None,getNoNode(),"Instruccion if")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"if", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(t[2])
+    t[0].addChild(t[3])
+    if (t[4]!= None):
+        t[0].addChild(t[4])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"end", t.lineno(5), find_column(input, t.slice[5])))
+
+def p_else_if_else(t):
+    '''else_if_else : ELSEIF expresion cuerpo_funcion else_if_else
+                    | ELSE cuerpo_funcion
+                    | '''
+    if(len(t)==1):
+        # Sin else ni elseif
+        t[0] = None
+    elif(len(t)==3):
+        # Con else
+        t[0] = InstruccionElse(None,getNoNode(),"Instruccion else")
+        t[0].addChild(GenericoExpresion(None,getNoNode(),"else", t.lineno(1), find_column(input, t.slice[1])))
+        t[0].addChild(t[2])
+    elif(len(t)==5):
+        t[0] = InstruccionElseIf(None,getNoNode(),"Instruccion elseif")
+        t[0].addChild(GenericoExpresion(None,getNoNode(),"elseif", t.lineno(1), find_column(input, t.slice[1])))
+        t[0].addChild(t[2])
+        t[0].addChild(t[3])
+        if t[4] != None:
+            t[0].addChild(t[4])
+#endregion
+
+#region Instruccion While
+def p_instruccion_while(t):
+    'instruccion_while : WHILE expresion cuerpo_funcion END'
+    t[0] = InstruccionWhile(None,getNoNode(),"Instruccion While")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"while", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(t[2])
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"end", t.lineno(4), find_column(input, t.slice[4])))
+#endregion
+
+#region Instruccion For
+def p_instruccion_for_rango(t):
+    'instruccion_for : FOR IDENTIFICADOR IN expresion DOSPTS expresion cuerpo_funcion END'
+    t[0] = InstruccionForRango(None,getNoNode(),"Instruccion For")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"for", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(TerminalIdentificador(t[2],getNoNode(),t[2], t.lineno(2), find_column(input, t.slice[2]), DataType.nothing))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"in", t.lineno(3), find_column(input, t.slice[3])))
+    t[0].addChild(t[4])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),":", t.lineno(5), find_column(input, t.slice[5])))
+    t[0].addChild(t[6])
+    t[0].addChild(t[7])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"end", t.lineno(8), find_column(input, t.slice[8])))
+
+def p_instruccion_for_cadena(t):
+    'instruccion_for : FOR IDENTIFICADOR IN expresion cuerpo_funcion END'
+    t[0] = InstruccionForCadena(None,getNoNode(),"Instruccion For")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"for", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(TerminalIdentificador(t[2],getNoNode(),t[2], t.lineno(2), find_column(input, t.slice[2]), DataType.nothing))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"in", t.lineno(3), find_column(input, t.slice[3])))
+    t[0].addChild(t[4])
+    t[0].addChild(t[5])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"end", t.lineno(6), find_column(input, t.slice[6])))
+#endregion
+
+#region Instruccion Asignacion Declaracion
+def p_instruccion_declaracion(t):
+    'asignacion_declaracion : IDENTIFICADOR IGUAL expresion DOSPTS DOSPTS tipo'
+    t[0] = InstruccionDeclaracion(None, getNoNode(),"Declaracion")
+    t[0].addChild(TerminalIdentificador(t[1],getNoNode(),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.nothing))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"="))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"::"))
+    t[0].addChild(t[6])
+
+def p_instruccion_asignacion(t):
+    'asignacion_declaracion : IDENTIFICADOR IGUAL expresion'
+    t[0] = InstruccionAsignacion(None, getNoNode(),"Asignacion")
+    t[0].addChild(TerminalIdentificador(t[1],getNoNode(),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.nothing))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"="))
+    t[0].addChild(t[3])
+#endregion
+
+#region Instrucción imprimir
+def p_imprimir_println(t):
+    'imprimir : PRINTLN PARIZQ lista_expresion PARDER'
+    t[0] = InstruccionPrintln(None,getNoNode(),"Instruccion println")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"println"))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"("))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")"))
+    
+
+def p_imprimir_print(t):
+    'imprimir : PRINT PARIZQ lista_expresion PARDER'
+    t[0] = InstruccionPrint(None,getNoNode(),"Instruccion print")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"println"))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"("))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")"))
+#endregion
+
+#region Instrucción Llamada a funciones
+def p_llamada_funcion_sin_parametros(t):
+    'llamada_funcion : IDENTIFICADOR PARIZQ PARDER'
+    t[0] = InstruccionLlamadaFuncion(None,getNoNode(),"Llamada Funcion")
+    t[0].addChild(TerminalIdentificador(t[1],getNoNode(),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.nothing))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"("))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")"))
+
+def p_llamada_funcion_con_parametros(t):
+    'llamada_funcion : IDENTIFICADOR PARIZQ lista_expresion PARDER'
+    t[0] = InstruccionLlamadaFuncionParam(None,getNoNode(),"Llamada Funcion")
+    t[0].addChild(TerminalIdentificador(t[1],getNoNode(),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.nothing))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"("))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")"))
+#endregion
+
+#region Funciones Nativas
+def p_funcion_uppercase(t):
+    'funcion_nativa : UPPERCASE PARIZQ expresion PARDER'
+    t[0] = FuncionUppercase(None,getNoNode(),"Funcion uppercase")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"uppercase", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
+def p_funcion_lowercase(t):
+    'funcion_nativa : LOWERCASE PARIZQ expresion PARDER'
+    t[0] = FuncionLowercase(None,getNoNode(),"Funcion lowercase")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"lowercase", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
+def p_funcion_log10(t):
+    'funcion_nativa : LOG10 PARIZQ expresion PARDER'
+    t[0] = FuncionLog10(None,getNoNode(),"Funcion logaritmo10")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"log10", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
+def p_funcion_log(t):
+    'funcion_nativa : LOG PARIZQ expresion COMA expresion PARDER'
+    t[0] = FuncionLog(None,getNoNode(),"Funcion logaritmo")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"log", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),",", t.lineno(4), find_column(input, t.slice[4])))
+    t[0].addChild(t[5])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(6), find_column(input, t.slice[6])))
+
+def p_funcion_sin(t):
+    'funcion_nativa : SIN PARIZQ expresion PARDER'
+    t[0] = FuncionSin(None,getNoNode(),"Funcion sin")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"sin", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
+def p_funcion_cos(t):
+    'funcion_nativa : COS PARIZQ expresion PARDER'
+    t[0] = FuncionCos(None,getNoNode(),"Funcion sin")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"cos", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
+def p_funcion_tan(t):
+    'funcion_nativa : TAN PARIZQ expresion PARDER'
+    t[0] = FuncionTan(None,getNoNode(),"Funcion tan")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"tan", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
+def p_funcion_sqrt(t):
+    'funcion_nativa : SQRT PARIZQ expresion PARDER'
+    t[0] = FuncionSqrt(None,getNoNode(),"Funcion sqrt")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"sqrt", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
+def p_funcion_parse(t):
+    'funcion_nativa : PARSE PARIZQ tipo COMA expresion PARDER'
+    t[0] = FuncionParse(None,getNoNode(),"Funcion parse")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"parse", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),",", t.lineno(4), find_column(input, t.slice[4])))
+    t[0].addChild(t[5])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(6), find_column(input, t.slice[6])))
+
+def p_funcion_trunc(t):
+    'funcion_nativa : TRUNC PARIZQ tipo COMA expresion PARDER'
+    t[0] = FuncionTrunc(None,getNoNode(),"Funcion trunc")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"trunc", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),",", t.lineno(4), find_column(input, t.slice[4])))
+    t[0].addChild(t[5])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(6), find_column(input, t.slice[6])))
+
+def p_funcion_float(t):
+    'funcion_nativa : FLOAT PARIZQ expresion PARDER'
+    t[0] = FuncionFloat(None,getNoNode(),"Funcion float")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"float", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
+def p_funcion_string(t):
+    'funcion_nativa : FSTR PARIZQ expresion PARDER'
+    t[0] = FuncionString(None,getNoNode(),"Funcion string")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"string", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
+def p_funcion_typeof(t):
+    'funcion_nativa : TYPEOF PARIZQ expresion PARDER'
+    t[0] = FuncionTypeof(None,getNoNode(),"Funcion string")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"string", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
+
+#endregion
+
+#endregion
 
 #region Expresion
+#region ListaExpresiones
+def p_lista_expresiones(t):
+    'lista_expresion : lista_expresion COMA expresion'
+    t[0]=t[1]
+    t[0].addChild(GenericoExpresion(None,getNoNode(),","))
+    t[0].addChild(t[3])
+
+def p_lista_expresion(t):
+    'lista_expresion : expresion'
+    t[0] = NodeListaExpresiones(None,getNoNode(),"Lista Exp")
+    t[0].addChild(t[1])
+#endregion
 #region Logicas
 def p_expresion_menor(t):
     '''expresion : expresion MENOR expresion'''
@@ -260,19 +765,23 @@ def p_expresion_agrupacion(t):
 #region Terminales con Tipo de Dato
 def p_expresion_entero(t):
     '''expresion    : ENTERO'''
-    t[0] = TerminalEntero(t[1], str(getNoNode()),t[1], t.lineno(1), t.lexpos(1), DataType.int64)
+    t[0] = TerminalEntero(t[1], str(getNoNode()),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.int64)
 
 def p_expresion_decimal(t):
     '''expresion    : DECIMAL'''
-    t[0] = TerminalDecimal(t[1], str(getNoNode()),t[1], t.lineno(1), t.lexpos(1), DataType.float64)
+    t[0] = TerminalDecimal(t[1], str(getNoNode()),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.float64)
 
 def p_expresion_cadena(t):
     '''expresion    : CADENA'''
-    t[0] = TerminalCadena(t[1], str(getNoNode()),t[1], t.lineno(1), t.lexpos(1), DataType.string)
+    t[0] = TerminalCadena(t[1], str(getNoNode()),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.string)
 
 def p_expresion_identificador(t):
     '''expresion    : IDENTIFICADOR'''
-    t[0] = TerminalIdentificador(t[1], str(getNoNode()),t[1], t.lineno(1), t.lexpos(1), DataType.identificador)
+    t[0] = TerminalIdentificador(t[1], str(getNoNode()),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.identificador)
+
+def p_expresion_uppercase(t):
+    'expresion      : funcion_nativa'
+    t[0] = t[1]
 
 
 #endregion
@@ -296,6 +805,8 @@ def getNoNode():
 
 
 def run_method(entrada):
+    global input
+    input = entrada
     global noNode
     noNode = 0;
     return parser.parse(entrada)

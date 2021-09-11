@@ -13,6 +13,7 @@ class DataType(enum.Enum):
     array = 7
     struct = 8
     identificador = 9
+    generic = 10
 
 matriz_checker =[
     [0,0,0,0,0,0,0,0,0], # Todo Error
@@ -319,6 +320,12 @@ def TypeChecker(op, enviroment, firstnode, secondnode):
     if (tipo!= DataType.error):
         return tipo
     if (firstType != DataType.error and secondType != DataType.error):
-        descripcion = "<b>"+ firstType.name + "</b> es incompatible con <b>"+ secondType.name + "</b> para la operacion <b>" + op + "</b>"
+        descripcion =""
+        if(firstnode.isIdentifier and not firstnode.identifierDeclare):
+            descripcion = "La variable <b>" + firstnode.texto + "</b> no está declarada"
+        elif(secondnode.isIdentifier and not secondnode.identifierDeclare):
+            descripcion = "La variable <b>" + secondnode.texto + "</b> no está declarada"
+        else:
+            descripcion = "<b>"+ firstType.name + "</b> es incompatible con <b>"+ secondType.name + "</b> para la operacion <b>" + op + "</b>"
         enviroment.addError(descripcion, secondnode.fila, secondnode.columna)
     return tipo

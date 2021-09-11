@@ -6,19 +6,19 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Linea</th>
-                    <th scope="col">Columna</th>
+                    <th scope="col">Simbolo</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Tipo</th>
                 </tr>
                 </thead>
                 <tbody>
+                  {%for simbolo in tabla_simbolos%}
                 <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <td>{{simbolo}}</td>
+                    <td>{{tabla_simbolos[simbolo].value}}</td>
+                    <td>{{tabla_simbolos[simbolo].type.name}}</td>
                 </tr>  
+                {%endfor%}
                 </tbody>
             </table>
         </div>
@@ -40,7 +40,7 @@
       <div class="spaced" style="height: 300px;">
         
         <center>
-          <img src={{ url_for('static', filename = "images/tree.svg")}} style="height: 300px;" />
+          <img src={{ url_for('static', filename = "images/tree.svg")}} style="height: 300px;  width: 300px;" />
         </center>
         </div>
       <div class="card-body">

@@ -21,6 +21,10 @@ class InstruccionForRango(Nodo):
                     self.valor = self.hijos[6].valor
                     self.tipo = self.hijos[6].tipo
                     break
+                if(self.hijos[6].isBreak):
+                    self.valor = self.hijos[6].tipo
+                    self.tipo = self.hijos[6].tipo
+                    break
         enviroment.actualizarValoresEntorno(nuevoEntorno)
 
         

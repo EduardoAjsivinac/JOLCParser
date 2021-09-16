@@ -17,6 +17,8 @@ class NodeNegativo(Nodo):
         self.isContinue = self.hijos[1].isContinue
         self.isBreak = self.hijos[1].isBreak
         self.isReturn = self.hijos[1].isReturn
+        self.isContinue = self.hijos[1].isContinue
+
         if(self.tipo == DataType.int64 or self.tipo == DataType.float64):
             self.valor=self.valor*-1
         else:

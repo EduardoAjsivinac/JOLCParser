@@ -455,6 +455,18 @@ def p_instruccion_instruccion_return(t):
     t[0].addChild(t[1])
     t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
 
+def p_instruccion_instruccion_break(t):
+    'instruccion : instruccion_break PTCOMA'
+    t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+
+def p_instruccion_instruccion_continue(t):
+    'instruccion : instruccion_continue PTCOMA'
+    t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
+
 def p_instruccion_instruccion_nativa_push(t):
     'instruccion : funcion_nativa_push PTCOMA'
     t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
@@ -763,6 +775,18 @@ def p_instruccion_return_valor(t):
     t[0].addChild(t[2])
 #endregion
 
+#region Break
+def p_instruccion_break(t):
+    'instruccion_break : BREAK'
+    t[0] = InstruccionBreak(None,getNoNode(),"Funcion break")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"break", t.lineno(1), find_column(input, t.slice[1])))
+#endregion
+#region Continue
+def p_instruccion_continue(t):
+    'instruccion_continue : CONTINUE'
+    t[0] = InstruccionContinue(None,getNoNode(),"Funcion continue")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"break", t.lineno(1), find_column(input, t.slice[1])))
+#endregion
 
 
 #region Expresion

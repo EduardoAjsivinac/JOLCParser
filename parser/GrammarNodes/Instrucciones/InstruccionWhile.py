@@ -1,3 +1,4 @@
+from parser.Entorno.Entorno import TipoEntorno
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
 
@@ -8,6 +9,8 @@ class InstruccionWhile(Nodo):
     def execute(self, enviroment):
         #while expresion instrucciones end
         sigueCiclo = True
+        tipoEntorno = enviroment.tipoEntorno
+        enviroment.tipoEntorno = TipoEntorno.cicloWhile
         while(sigueCiclo):
             
             self.hijos[1].execute(enviroment)
@@ -19,11 +22,17 @@ class InstruccionWhile(Nodo):
                         self.valor = self.hijos[2].valor
                         self.tipo = self.hijos[2].tipo
                         break
-                        #return
+                    if(self.hijos[2].isBreak):
+                        self.valor = self.hijos[2].valor
+                        self.tipo = self.hijos[2].tipo
+                        sigueCiclo=False
+                        break
                 else:
                     sigueCiclo=False
             else:
                 sigueCiclo=False
+        print()
+        enviroment.tipoEntorno = tipoEntorno
 
         
 

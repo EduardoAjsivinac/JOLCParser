@@ -18,6 +18,12 @@ class InstruccionForCadena(Nodo):
                 self.hijos[4].execute(nuevoEntorno)
                 self.isReturn = self.hijos[4].isReturn
                 if (self.isReturn):
+                    self.valor = self.hijos[4].valor
+                    self.tipo = self.hijos[4].tipo
+                    break
+                if (self.hijos[4].isBreak):
+                    self.valor = self.hijos[4].valor
+                    self.tipo = self.hijos[4].tipo
                     break
 
         elif (self.hijos[3].tipo==DataType.array):
@@ -34,6 +40,10 @@ class InstruccionForCadena(Nodo):
                 if (self.isReturn):
                     self.valor = self.hijos[4].valor
                     self.tipo = self.hijos[4].tipo
+                    break
+                if(self.hijos[4].isBreak):
+                    self.valor = self.hijos[4].isBreak
+                    self.tipo = self.hijos[4].isBreak
                     break
         enviroment.actualizarValoresEntorno(nuevoEntorno)
 

@@ -23,3 +23,5 @@ from .AccesoAPosicion import AccesoAPosicion
 from .AsignacionAPosicion import AsignacionAPosicion
 from .ArregloAPosicion import ArregloAPosicion
 from .AccesoAArreglo import AccesoAArreglo
+from .InstruccionBreak import InstruccionBreak
+from .InstruccionContinue import InstruccionContinue

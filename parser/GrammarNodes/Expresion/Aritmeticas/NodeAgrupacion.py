@@ -18,6 +18,9 @@ class NodeAgrupacion(Nodo):
         self.isContinue = self.hijos[1].isContinue
         self.isBreak = self.hijos[1].isBreak
         self.isReturn = self.hijos[1].isReturn
+        self.isContinue = self.hijos[1].isContinue
+        self.isBreak = self.hijos[1].isBreak
+
 
 
 

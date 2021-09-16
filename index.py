@@ -26,7 +26,7 @@ def home():
 
 @app.route('/workarea')
 def workarea():
-    archivo = open("Entradas/prueba.jl")
+    archivo = open("Entradas/Funciones/recursivas.jl")
     entrada=""
     for linea in archivo:
         entrada+=str(linea)

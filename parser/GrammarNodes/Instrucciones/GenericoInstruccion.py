@@ -18,6 +18,25 @@ class GenericoInstruccion(Nodo):
                 else:
                     descripcion = "La instruccion retorno se debe definir dentro de una funcion"
                     enviroment.addError(descripcion,x.hijos[0].fila,x.hijos[0].columna)
+            if(x.isBreak):
+                if (enviroment.tipoEntorno != TipoEntorno.eglobal):
+                    self.isBreak = True
+                    self.tipo = x.tipo
+                    self.valor = x.valor
+                    break
+                else:
+                    descripcion = "La instruccion break se debe definir dentro de una funcion"
+                    enviroment.addError(descripcion,x.hijos[0].fila,x.hijos[0].columna)
+            if(x.isContinue):
+                if (enviroment.tipoEntorno != TipoEntorno.eglobal):
+                    self.isContinue = True
+                    self.tipo = x.tipo
+                    self.valor = x.valor
+                    break
+                else:
+                    descripcion = "La instruccion continue se debe definir dentro de una funcion"
+                    enviroment.addError(descripcion,x.hijos[0].fila,x.hijos[0].columna)
+
 
     def getC3D(self):
         pass

@@ -11,6 +11,8 @@ class InstruccionElse(Nodo):
         self.valor = self.hijos[1].valor
         self.tipo = self.hijos[1].tipo
         self.isReturn = self.hijos[1].isReturn
+        self.isContinue = self.hijos[1].isContinue
+        self.isBreak = self.hijos[1].isBreak
         
 
     def getC3D(self):

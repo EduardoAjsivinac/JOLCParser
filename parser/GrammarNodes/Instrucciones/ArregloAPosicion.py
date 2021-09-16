@@ -1,16 +1,20 @@
 from parser.Entorno.Entorno import Entorno
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
+from copy import deepcopy
 
-class InstruccionElse(Nodo):
+class ArregloAPosicion(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo= None):
         super().__init__(valor, id_nodo, texto, fila=fila, columna=columna, tipo=tipo)
     
     def execute(self, enviroment):
-        self.hijos[1].execute(enviroment)
-        self.valor = self.hijos[1].valor
-        self.tipo = self.hijos[1].tipo
-        self.isReturn = self.hijos[1].isReturn
+        self.valor = []
+        for x in self.hijos:
+            x.execute(enviroment)
+            if(x.tipo==DataType.int64):
+                self.valor.append(x.valor)
+            else:
+                self.tipo = DataType.error
         
 
     def getC3D(self):

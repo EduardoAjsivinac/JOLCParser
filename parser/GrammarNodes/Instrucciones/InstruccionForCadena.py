@@ -16,8 +16,25 @@ class InstruccionForCadena(Nodo):
             for x in arreglo_recorrer:
                 nuevoEntorno.updateSymbol(self.hijos[1].texto, self.hijos[1].fila, self.hijos[1].columna, x, DataType.int64)
                 self.hijos[4].execute(nuevoEntorno)
-        enviroment.concatErrors(nuevoEntorno.pilaErrores)
-        enviroment.agregarPila(nuevoEntorno.consolaSalida)
+                self.isReturn = self.hijos[4].isReturn
+                if (self.isReturn):
+                    break
+
+        elif (self.hijos[3].tipo==DataType.array):
+            arreglo_recorrer = []
+            tipos = []
+            for x in self.hijos[3].valor:
+                arreglo_recorrer.append(x.valor)
+                tipos.append(x.tipo)
+
+            for x in range(0,len(arreglo_recorrer)):
+                nuevoEntorno.updateSymbol(self.hijos[1].texto, self.hijos[1].fila, self.hijos[1].columna, arreglo_recorrer[x], tipos[x])
+                self.hijos[4].execute(nuevoEntorno)
+                self.isReturn = self.hijos[4].isReturn
+                if (self.isReturn):
+                    self.valor = self.hijos[4].valor
+                    self.tipo = self.hijos[4].tipo
+                    break
         enviroment.actualizarValoresEntorno(nuevoEntorno)
 
         

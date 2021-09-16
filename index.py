@@ -9,6 +9,8 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import redirect
+import sys
+sys.setrecursionlimit(10000)
 
 app = Flask(__name__)
 
@@ -24,7 +26,11 @@ def home():
 
 @app.route('/workarea')
 def workarea():
-    return render_template('html/workarea.html', project_name = "JOLC Parser")
+    archivo = open("Entradas/prueba.jl")
+    entrada=""
+    for linea in archivo:
+        entrada+=str(linea)
+    return render_template('html/workarea.html', project_name = "JOLC Parser", entrada=entrada)
 
 @app.route('/parse', methods=['POST'])
 def parser():
@@ -34,7 +40,7 @@ def parser():
     analizo = True
     entrada = request.json['entrada']
     resultado = run_method(entrada)
-    nuevoEntorno = Entorno("general")
+    nuevoEntorno = Entorno("general", TipoEntorno.eglobal)
     resultado.execute(nuevoEntorno)
     dotresult = "digraph G {" + resultado.getdot()+ "}"
     #tabla_simbolos = nuevoEntorno.getTable().simbolos

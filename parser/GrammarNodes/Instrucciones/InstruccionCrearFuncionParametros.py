@@ -1,4 +1,4 @@
-from parser.Entorno.Entorno import Entorno
+from parser.Entorno.Entorno import Entorno, TipoEntorno
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
 
@@ -7,8 +7,7 @@ class InstruccionCrearFuncionParametros(Nodo):
         super().__init__(valor, id_nodo, texto, fila=fila, columna=columna, tipo=tipo)
     
     def execute(self, enviroment):
-        # function ID ( lista_parametros ) instrucciones end
-        newEnviroment = Entorno("funcion")
+        newEnviroment = Entorno("funcion", TipoEntorno.funcion)
         dictParam = {}
         arrParam=[]
         hayError = False

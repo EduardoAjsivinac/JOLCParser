@@ -17,3 +17,9 @@ from .InstruccionElse import InstruccionElse
 from .InstruccionWhile import InstruccionWhile
 from .InstruccionForRango import InstruccionForRango
 from .InstruccionForCadena import InstruccionForCadena
+from .InstruccionReturn import InstruccionReturn
+from .InstruccionReturnValor import InstruccionReturnValor
+from .AccesoAPosicion import AccesoAPosicion
+from .AsignacionAPosicion import AsignacionAPosicion
+from .ArregloAPosicion import ArregloAPosicion
+from .AccesoAArreglo import AccesoAArreglo

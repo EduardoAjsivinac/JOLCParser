@@ -9,10 +9,17 @@ class InstruccionWhile(Nodo):
         #while expresion instrucciones end
         sigueCiclo = True
         while(sigueCiclo):
+            
             self.hijos[1].execute(enviroment)
             if(self.hijos[1].tipo == DataType.bool):
                 if(self.hijos[1].valor):
                     self.hijos[2].execute(enviroment)
+                    self.isReturn = self.hijos[2].isReturn
+                    if(self.isReturn):
+                        self.valor = self.hijos[2].valor
+                        self.tipo = self.hijos[2].tipo
+                        break
+                        #return
                 else:
                     sigueCiclo=False
             else:

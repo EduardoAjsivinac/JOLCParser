@@ -7,6 +7,8 @@ class NodeListaExpresiones(Nodo):
     
     def execute(self, enviroment):
         # expresion, expresion, expresion, expresion
+        self.tipo = DataType.nothing
+        self.valor = None
         for x in self.hijos:
             x.execute(enviroment)
             if (x.tipo == DataType.error):

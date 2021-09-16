@@ -1,10 +1,11 @@
 from abc import ABCMeta, abstractmethod
+from parser.GrammarNodes.Tipo.DataType import DataType
 from parser.Entorno.Entorno import Entorno
 import sys
 sys.setrecursionlimit(5000)
 class Nodo(metaclass=ABCMeta):
 
-    def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo = None):
+    def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo = DataType.nothing):
         self.id_nodo = id_nodo
         self.valor = valor
         self.fila = fila
@@ -14,6 +15,10 @@ class Nodo(metaclass=ABCMeta):
         self.texto = texto
         self.isIdentifier = False
         self.identifierDeclare = False #Bandera para saber si está declarado el identificador antes o si es un identificador con valor Nothing
+        self.isContinue = False
+        self.isBreak = False
+        self.isReturn = False
+        self.arraySize = 0
 
     def getid(self):
         return str(self.id_nodo)

@@ -9,7 +9,7 @@ class FuncionString(Nodo):
     
     def execute(self, enviroment):
         self.hijos[2].execute(enviroment)
-        if(self.hijos[2].tipo == DataType.float64 or self.hijos[2].tipo == DataType.array or self.hijos[2].tipo == DataType.int64):
+        if(self.hijos[2].tipo == DataType.float64 or self.hijos[2].tipo == DataType.array or self.hijos[2].tipo == DataType.int64 or self.hijos[2].tipo == DataType.string):
             self.valor = str(self.hijos[2].valor)
             self.tipo = DataType.string
         else:

@@ -11,3 +11,6 @@ from .FuncionTrunc import FuncionTrunc
 from .FuncionFloat import FuncionFloat
 from .FuncionString import FuncionString
 from .FuncionTypeof import FuncionTypeof
+from .FuncionLength import FuncionLength
+from .FuncionPush import FuncionPush
+from .FuncionPop import FuncionPop

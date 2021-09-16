@@ -16,8 +16,11 @@ class InstruccionForRango(Nodo):
             for i in range(self.hijos[3].valor, self.hijos[5].valor+1): #Se le suma 1 porque JULIA trabaja con [inicio final] y no como python [inicio final)
                 nuevoEntorno.updateSymbol(self.hijos[1].texto, self.hijos[1].fila, self.hijos[1].columna, i, DataType.int64)
                 self.hijos[6].execute(nuevoEntorno)
-        enviroment.concatErrors(nuevoEntorno.pilaErrores)
-        enviroment.agregarPila(nuevoEntorno.consolaSalida)
+                self.isReturn = self.hijos[6].isReturn
+                if(self.isReturn):
+                    self.valor = self.hijos[6].valor
+                    self.tipo = self.hijos[6].tipo
+                    break
         enviroment.actualizarValoresEntorno(nuevoEntorno)
 
         

@@ -1,3 +1,4 @@
+from parser.GrammarNodes.Tipo.DataType import DataType
 from ..Node import Nodo
 
 class GenericoExpresion(Nodo):
@@ -5,7 +6,8 @@ class GenericoExpresion(Nodo):
         super().__init__(valor, id_nodo, texto, fila=fila, columna=columna)
     
     def execute(self, enviroment):
-        pass
+        self.tipo = DataType.nothing
+        self.valor = None
 
     def getC3D(self):
         pass

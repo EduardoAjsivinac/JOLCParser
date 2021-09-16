@@ -133,3 +133,4 @@ dmypy.json
 gramatica.txt
 OperacionesPendientes.txt
 static/images/tree.svg
+.vscode

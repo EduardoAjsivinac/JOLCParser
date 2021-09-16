@@ -8,8 +8,9 @@ class FuncionTypeof(Nodo):
         super().__init__(valor, id_nodo, texto, fila=fila, columna=columna)
     
     def execute(self, enviroment):
-        #ypeof(expresion)
         self.hijos[2].execute(enviroment)
+        if (self.hijos[2].tipo==None):
+            self.hijos[2].tipo=DataType.nothing
         self.valor = self.hijos[2].tipo.name
         self.tipo = self.hijos[2].tipo
 

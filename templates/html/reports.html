@@ -1,0 +1,142 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="card-group bg-dark" style="height: 80vh;">
+    <div class="card bg-dark text-light">
+        <div class="spaced table-responsive bg-light" style="height: 300px;">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Entorno</th>
+                    <th scope="col">Simbolo</th>
+                    <th scope="col">Tipo</th>
+                </tr>
+                </thead>
+                <tbody>
+                {%for entorno in tabla_simbolos%}
+                  {%for simbolo in tabla_simbolos[entorno]%}
+                  <tr>
+                      <td>{{entorno}}</td>
+                      <td>{{simbolo}}</td>
+                      <td>{{tabla_simbolos[entorno][simbolo]['clase']}}</td>
+                  </tr>  
+                  {%endfor%}
+                {%endfor%}
+                </tbody>
+            </table>
+        </div>
+      <div class="card-body">
+        <h5 class="card-title">Tabla de Símbolos</h5>
+        <p class="card-text">Reporte que muestra la tabla de Símbolos generado después del análisis.</p>
+        <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+        
+      </div>
+      <div class="card-footer">
+          <center>
+            <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tablaSimbolos">
+                Mostrar reporte        
+            </button> -->
+        </center>
+        </div>
+    </div>
+    <div class="card bg-dark text-light">
+      <div class="spaced bg-light" style="height: 300px;">
+        
+        <center>
+          <img src={{ url_for('static', filename = "images/tree.svg")}} style="height: 300px;  width: 300px;" />
+        </center>
+        </div>
+      <div class="card-body">
+        <h5 class="card-title">Árbol de análisis sintáctico</h5>
+        <p class="card-text">Árbol de análisis sintáctico generado con ayuda de Graphviz si no existen errores en el análisis.</p>
+        <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+      </div>
+      <div class="card-footer">
+        <center>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#arbol">
+              Mostrar reporte        
+          </button>
+      </center>
+      </div>
+    </div>
+    <div class="card bg-dark text-light">
+      <div class="spaced bg-light" style="height: 300px;">
+        <table class="table">
+          <thead>
+          <tr>
+              <th scope="col">Descripcion</th>
+              <th scope="col">Linea</th>
+              <th scope="col">Columna</th>
+          </tr>
+          </thead>
+          <tbody>
+          {%for simerror in tabla_errores%}
+            <tr>
+              {% autoescape false %}
+                <td>{{simerror['descripcion']}}</td>
+                {% endautoescape %}
+                <td>{{simerror['linea']}}</td>
+                <td>{{simerror['linea']}}</td>
+            </tr>  
+          {%endfor%}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Tabla de errores</h5>
+        <p class="card-text">Tabla que muestra los errores que se generaron durante el análisis.</p>
+        <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+      </div>
+      <div class="card-footer">
+        <center>
+          <!--
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tablaSimbolos">
+              Mostrar reporte        
+          </button>
+          -->
+      </center>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="tablaSimbolos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="/getSVGImage" class="btn btn-primary">Descargar Imagen</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Modal Arbol-->
+  <div class="modal fade" id="arbol" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Árbol de análisis sintáctico</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <img src={{ url_for('static', filename = "images/tree.svg")}} style="height: 100%;" />
+            
+        </div>
+        <div class="modal-footer">
+          <a href="/getSVGImage" class="btn btn-primary">Descargar Imagen</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -31,7 +31,6 @@ class InstruccionWhile(Nodo):
                     sigueCiclo=False
             else:
                 sigueCiclo=False
-        print()
         enviroment.tipoEntorno = tipoEntorno
 
         

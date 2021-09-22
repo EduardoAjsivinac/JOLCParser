@@ -25,3 +25,13 @@ from .ArregloAPosicion import ArregloAPosicion
 from .AccesoAArreglo import AccesoAArreglo
 from .InstruccionBreak import InstruccionBreak
 from .InstruccionContinue import InstruccionContinue
+from .InstruccionDeclaracionInmutable import InstruccionDeclaracionInmutable
+from .InstruccionDeclaracionMutable import InstruccionDeclaracionMutable
+from .AtributoGenerico import AtributoGenerico
+from .AtributoNoGenerico import AtributoNoGenerico
+from .ListaAtributosStruct import ListaAtributosStruct
+from .ListaAccesosStruct import ListaAccesosStruct
+from .AccesoAAtributo import AccesoAAtributo 
+from .InstruccionAsignacionAtributoStruct import InstruccionAsignacionAtributoStruct
+from .InstruccionAccesoAtributoStruct import InstruccionAccesoAtributoStruct
+from .InstruccionPrintSinParametros import InstruccionPrintSinParametros

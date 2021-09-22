@@ -8,13 +8,6 @@ class InstruccionIf(Nodo):
         super().__init__(valor, id_nodo, texto, fila=fila, columna=columna, tipo=tipo)
     
     def execute(self, enviroment):
-        #if (len(self.hijos)==5):
-            #    #Con else o if
-            #    pass
-            #else:
-            #    #sin else o if
-            #    pass
-        #nuevoEntorno = deepcopy(enviroment)
         self.hijos[1].execute(enviroment)
         if(self.hijos[1].tipo==DataType.bool):
             if(self.hijos[1].valor):

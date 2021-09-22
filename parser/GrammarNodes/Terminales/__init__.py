@@ -6,3 +6,4 @@ from .TerminalFalso import TerminalFalso
 from .TerminalVerdadero import TerminalVerdadero
 from .TerminalArreglo import TerminalArreglo
 from .TerminalPosicionArray import TerminalPosicionArray
+from .TerminalNulo import TerminalNulo

@@ -16,11 +16,11 @@ score = [
 ];
 
 function insertarValores(array)
-    push!(array,[[125,110,18,145,1100]]);
-    push!(array,[[56,98,78,190,8200]]);
+    push(array,[[125,110,18,145,1100]]);
+    push(array,[[56,98,78,190,8200]]);
     for i in 1:4
         for j in 2:5
-            push!(array[i],[i+j+34, i+j+56, i+j+76, i+j+20, i+j+50]);
+            push(array[i],[i+j+34, i+j+56, i+j+76, i+j+20, i+j+50]);
         end;
     end;
 end;

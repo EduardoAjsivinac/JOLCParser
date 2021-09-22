@@ -16,6 +16,7 @@ from parser.GrammarNodes.Expresion.Logicas import *
 
 # Define variables globales
 global noNode
+global listaErrores 
 
 # -----------------------------------------------
 # Analizador léxico realizado en lex.py para JOLC
@@ -31,7 +32,7 @@ global noNode
 reserved = {
     'println' : 'PRINTLN',
     'print' : 'PRINT',
-    'Nothing' : 'NOTHING',
+    'nothing' : 'NOTHING',
     'Int64' : 'INT64',
     'Float64' : 'FLOAT64',
     'Bool' : 'BOOL',
@@ -65,7 +66,9 @@ reserved = {
     'continue' : 'CONTINUE',
     'length' : 'LENGTH',
     'push' : 'PUSH',
-    'pop' : 'POP'
+    'pop' : 'POP',
+    'struct' : 'STRUCT',
+    'mutable' : 'MUTABLE'
 
  }
 
@@ -134,11 +137,14 @@ tokens  = (
     'CORIZQ',
     'CORDER',
     'DOSPTS',
+    'PUNTO',
     'PTCOMA',
     'COMA',
     'OR',
     'AND',
-    'NOT'
+    'NOT',
+    'STRUCT',
+    'MUTABLE',
 )
 
 # Tokens
@@ -172,6 +178,8 @@ t_CONTINUE  = r'continue'
 t_LENGTH    = r'length'
 t_PUSH      = r'push'
 t_POP       = r'pop'
+t_STRUCT    = r'struct'
+t_MUTABLE   = r'mutable'
 
 t_NOTHING   = r'Nothing'
 t_INT64     = r'Int64'
@@ -179,6 +187,9 @@ t_FLOAT64   = r'Float64'
 t_BOOL      = r'Bool'
 t_CHAR      = r'Char'
 t_STRING    = r'String'
+t_DOSPTS    = r':'
+t_AND       = r'&&'
+t_NOT       = r'!'
 
 t_TRUE      = r'true'
 t_FALSE     = r'false'
@@ -200,11 +211,12 @@ t_MENORIGUAL= r'<='
 t_MAYORIGUAL= r'>='
 t_DIFIGUAL  = r'!='
 t_OR        = r'\|\|'
+
 t_PTCOMA    = r';'
-t_DOSPTS    = r':'
+
 t_COMA    = r','
-t_AND       = r'&&'
-t_NOT       = r'!'
+t_PUNTO    = r'.'
+
 
 def t_COMENTARIO_MULTILINEA(t):
     r'\#=(.|\n)*?=\#'
@@ -220,6 +232,7 @@ def t_DECIMAL(t):
         t.value = float(t.value)
     except ValueError:
         print("Floaat value too large %d", t.value)
+        addError("Floaat value too large <b>"+str(t.value)+"</b>",t.lineno, t.lexpos)
         t.value = 0
     return t
 
@@ -229,6 +242,7 @@ def t_ENTERO(t):
         t.value = int(t.value)
     except ValueError:
         print("Integer value too large %d", t.value)
+        addError("Integer value too large <b>"+str(t.value)+"</b>",t.lineno, t.lexpos)
         t.value = 0
     return t
 
@@ -253,13 +267,17 @@ def find_column(inp, token):
 
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
+    addError("Caracter no reconocido <b>"+str(t.value[0])+"</b>", t.lineno, t.lexpos)
     t.lexer.skip(1)
 
 t_ignore = " \t"
     
 # Construyendo el analizador léxico
 import ply.lex as lex
+global lexer
 lexer = lex.lex()
+lexer.lineno =1
+
 
 #endregion
 
@@ -333,7 +351,10 @@ def p_tipo_char(t):
 def p_tipo_string(t):
     'tipo : STRING'
     t[0] = NodeTipo(None,getNoNode(),t[1],t.lineno(1), find_column(input, t.slice[1]), DataType.string)
-    
+
+def p_tipo_struct(t):
+    'tipo : IDENTIFICADOR'
+    t[0] = NodeTipo(None,getNoNode(),t[1],t.lineno(1), find_column(input, t.slice[1]), DataType.struct)
 #endregion
 #region Lista identificadores
 def p_lista_ids(t):
@@ -472,7 +493,12 @@ def p_instruccion_instruccion_nativa_push(t):
     t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
     t[0].addChild(t[1])
     t[0].addChild(GenericoExpresion(None,getNoNode(),";"))
-    
+
+def p_instruccion_declaracion_struct(t):
+    'instruccion : declaracion_struct PTCOMA'
+    t[0] = GenericoInstruccion(None, getNoNode(),"Instruccion")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";", t.lineno(2), find_column(input, t.slice[2])))
 #endregion
 #region Instruccion If
 def p_instruccion_if(t):
@@ -554,6 +580,13 @@ def p_instruccion_asignacion(t):
     t[0].addChild(GenericoExpresion(None,getNoNode(),"="))
     t[0].addChild(t[3])
 
+def p_instruccion_acceso_atributo_struct(t):
+    'asignacion_declaracion : acceso_a_struct IGUAL expresion'
+    t[0] = InstruccionAsignacionAtributoStruct(None, getNoNode(),"Asignacion Atributo")
+    t[0].addChild(t[1])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"="))
+    t[0].addChild(t[3])
+
 def p_instruccion_asignacion_arreglo(t):
     'asignacion_declaracion : IDENTIFICADOR CORIZQ expresion CORDER asignacion_declaracion_array_multi IGUAL expresion'
     t[0] = AsignacionAPosicion(None,getNoNode(),"Asignacion a posicion")
@@ -598,6 +631,13 @@ def p_imprimir_print(t):
     t[0].addChild(GenericoExpresion(None,getNoNode(),"println"))
     t[0].addChild(GenericoExpresion(None,getNoNode(),"("))
     t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")"))
+
+def p_imprimir_println_sin_parametros(t):
+    'imprimir : PRINTLN PARIZQ PARDER'
+    t[0] = InstruccionPrintSinParametros(None, getNoNode(), "Instruccion println")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"println"))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"("))
     t[0].addChild(GenericoExpresion(None,getNoNode(),")"))
 #endregion
 #region Instrucción Llamada a funciones
@@ -703,6 +743,14 @@ def p_funcion_trunc(t):
     t[0].addChild(t[5])
     t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(6), find_column(input, t.slice[6])))
 
+def p_funcion_trunc_sin_tipo(t):
+    'funcion_nativa : TRUNC PARIZQ expresion PARDER'
+    t[0] = FuncionTrunc(None,getNoNode(),"Funcion trunc")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"trunc", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"(", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),")", t.lineno(4), find_column(input, t.slice[4])))
+
 def p_funcion_float(t):
     'funcion_nativa : FLOAT PARIZQ expresion PARDER'
     t[0] = FuncionFloat(None,getNoNode(),"Funcion float")
@@ -774,7 +822,6 @@ def p_instruccion_return_valor(t):
     t[0].addChild(GenericoExpresion(None,getNoNode(),"return", t.lineno(1), find_column(input, t.slice[1])))
     t[0].addChild(t[2])
 #endregion
-
 #region Break
 def p_instruccion_break(t):
     'instruccion_break : BREAK'
@@ -787,7 +834,52 @@ def p_instruccion_continue(t):
     t[0] = InstruccionContinue(None,getNoNode(),"Funcion continue")
     t[0].addChild(GenericoExpresion(None,getNoNode(),"break", t.lineno(1), find_column(input, t.slice[1])))
 #endregion
+#region Structs
+def p_declaracion_struct_inmutable(t):
+    'declaracion_struct : STRUCT IDENTIFICADOR instrucciones_struct END'
+    t[0] = InstruccionDeclaracionInmutable(None, getNoNode(),"Struct Inmutable")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"struct", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(TerminalIdentificador(t[2], str(getNoNode()),t[2], t.lineno(2), find_column(input, t.slice[2]), DataType.identificador))
+    t[0].addChild(t[3])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"end", t.lineno(4), find_column(input, t.slice[4])))
 
+def p_declaracion_struct_mutable(t):
+    'declaracion_struct : MUTABLE STRUCT IDENTIFICADOR instrucciones_struct END'
+    t[0] = InstruccionDeclaracionMutable(None, getNoNode(),"Struct Mutable")
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"mutable", t.lineno(1), find_column(input, t.slice[1])))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"struct", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(TerminalIdentificador(t[3], str(getNoNode()),t[3], t.lineno(3), find_column(input, t.slice[3]), DataType.identificador))
+    t[0].addChild(t[4])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"end", t.lineno(5), find_column(input, t.slice[5])))
+
+def p_instrucciones_struct(t):
+    'instrucciones_struct : instrucciones_struct instruccion_struct'
+    t[0]=t[1]
+    t[0].addChild(t[2])
+    
+
+def p_instruccion_struct(t):
+    'instrucciones_struct : instruccion_struct'
+    t[0]=ListaAtributosStruct(None,getNoNode(),"Lista Atributos")
+    t[0].addChild(t[1])
+
+def p_instruccion_struct_tipo(t):
+    'instruccion_struct : IDENTIFICADOR DOSPTS DOSPTS tipo PTCOMA'
+    t[0] = AtributoNoGenerico(None,getNoNode(),"Atributo No Generico")
+    t[0].addChild(TerminalIdentificador(t[1], str(getNoNode()),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.identificador))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),"::", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].addChild(t[4])
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";", t.lineno(5), find_column(input, t.slice[5])))
+
+def p_instruccion_struct_generico(t):
+    'instruccion_struct : IDENTIFICADOR PTCOMA'
+    t[0] = AtributoGenerico(None,getNoNode(),"Atributo Generico")
+    t[0].addChild(TerminalIdentificador(t[1], str(getNoNode()),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.identificador))
+    t[0].addChild(GenericoExpresion(None,getNoNode(),";", t.lineno(2), find_column(input, t.slice[2])))
+
+
+
+#endregion Struct
 
 #region Expresion
 #region ListaExpresiones
@@ -950,6 +1042,10 @@ def p_expresion_falso(t):
     'expresion : FALSE'
     t[0] = TerminalFalso(False, str(getNoNode()),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.bool)
 
+def p_expresion_nothing(t):
+    'expresion : NOTHING'
+    t[0] = TerminalNulo(False, str(getNoNode()),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.nothing)
+
 def p_expresion_uppercase(t):
     'expresion      : funcion_nativa'
     t[0] = t[1]
@@ -965,7 +1061,13 @@ def p_expresion_declaracion_arreglo(t):
 def p_expresion_posicion_array(t):
     'expresion      : acceso_posicion_array '
     t[0] = t[1]
+
+def p_instruccion_expresion_acceso_atributo_struct(t):
+    'expresion : acceso_a_struct'
+    t[0] = InstruccionAccesoAtributoStruct(None, getNoNode(),"Acceso Atributo")
+    t[0].addChild(t[1])
 #endregion
+
 #region Declaración arreglo
 def p_declaracion_arreglo(t):
     'declaracion_arreglo : CORIZQ lista_expresion CORDER'
@@ -1000,12 +1102,31 @@ def p_posicion_array_multi(t):
     
     
 #endregion
+#endregion
+
+#region Acceso a Structs
+def p_acceso_a_estruct(t):
+    'acceso_a_struct : IDENTIFICADOR PUNTO IDENTIFICADOR acceso_lista_atributos_struct'
+    t[0] = t[4]
+    t[0].hijos.insert(0,TerminalIdentificador(t[3], str(getNoNode()),t[3], t.lineno(3), find_column(input, t.slice[3]), DataType.identificador))
+    t[0].hijos.insert(0,GenericoExpresion(None,getNoNode(),".", t.lineno(2), find_column(input, t.slice[2])))
+    t[0].hijos.insert(0,TerminalIdentificador(t[1], str(getNoNode()),t[1], t.lineno(1), find_column(input, t.slice[1]), DataType.identificador))
+
+def p_acceso_lista_atributos_struct(t):
+    '''acceso_lista_atributos_struct : PUNTO IDENTIFICADOR acceso_lista_atributos_struct
+                                    |'''
+    if(len(t)==4):
+        t[0]=t[3]
+        t[0].hijos.insert(0,TerminalIdentificador(t[2], str(getNoNode()),t[2], t.lineno(2), find_column(input, t.slice[2]), DataType.identificador))
+        t[0].hijos.insert(0,GenericoExpresion(None,getNoNode(),".", t.lineno(1), find_column(input, t.slice[1])))
+    else:
+        t[0] = ListaAccesosStruct(None,getNoNode(),"Acceso a Struct")
 
 #endregion
 
 #region Errores
 def p_error(t):
-    print("Error sintáctico en '%s'" % t.value)
+    addError("Error sintáctico en <b>"+str(t.value)+"</b>", t.lineno,t.lexpos)
 
 #endregion
 
@@ -1019,10 +1140,24 @@ def getNoNode():
     noNode = noNode + 1
     return noNode
 
+def addError(descripcion, linea, columna):
+    global listaErrores
+    listaErrores.append({
+            'descripcion': descripcion, 
+            'linea' :linea,
+            'columna' : columna,
+            'clase' : 'sintactico'
+            })
 
 def run_method(entrada):
+    global lexer
+    lexer.lineno = 1
     global input
     input = entrada
     global noNode
     noNode = 0;
-    return parser.parse(entrada)
+    global listaErrores 
+    listaErrores= []
+    raiz = parser.parse(entrada)
+    dictRetorno = {"raiz" : raiz, "errores": listaErrores}
+    return dictRetorno

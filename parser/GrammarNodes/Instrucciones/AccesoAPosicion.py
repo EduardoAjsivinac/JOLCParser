@@ -40,7 +40,7 @@ class AccesoAPosicion(Nodo):
                     descripcion = "Indice fuera de rango " + str(indice)+" "+str(len(nodeArray.valor))
                     enviroment.addError(descripcion,self.fila, self.columna)
             else:
-                descripcion = "El valor no es un arreglo" + str(nodeArray.tipo)
+                descripcion = "El valor no es un arreglo <b>" + str(nodeArray.tipo)+ "</b>"
                 enviroment.addError(descripcion,self.fila, self.columna)
         else:
             descripcion = "Los indices deben ser enteros positivos mayores a 0"

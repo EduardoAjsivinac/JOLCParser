@@ -183,6 +183,13 @@ matrizchecker = {
                 DataType.bool : DataType.bool,
                 DataType.char : DataType.bool,
                 DataType.string : DataType.bool
+            },DataType.struct : {
+                DataType.nothing : DataType.bool,
+                DataType.int64 : DataType.bool,
+                DataType.float64 : DataType.bool,
+                DataType.bool : DataType.bool,
+                DataType.char : DataType.bool,
+                DataType.string : DataType.bool
             }
         },
     '==' : {
@@ -229,7 +236,22 @@ matrizchecker = {
                 DataType.bool : DataType.bool,
                 DataType.char : DataType.bool,
                 DataType.string : DataType.bool
+            },DataType.generic : {
+                DataType.nothing : DataType.bool,
+                DataType.int64 : DataType.bool,
+                DataType.float64 : DataType.bool,
+                DataType.bool : DataType.bool,
+                DataType.char : DataType.bool,
+                DataType.string : DataType.bool
+            },DataType.struct : {
+                DataType.nothing : DataType.bool,
+                DataType.int64 : DataType.bool,
+                DataType.float64 : DataType.bool,
+                DataType.bool : DataType.bool,
+                DataType.char : DataType.bool,
+                DataType.string : DataType.bool
             }
+
         },
     '<' : {
             DataType.int64 : {
@@ -316,6 +338,7 @@ def TypeChecker(op, enviroment, firstnode, secondnode):
     # Se crea la matriz de validaciones
     firstType = firstnode.tipo
     secondType = secondnode.tipo
+
     tipo = matrizchecker.get(op,merror).get(firstType,merror).get(secondType,merror.get(DataType.error))
     if (tipo!= DataType.error):
         return tipo

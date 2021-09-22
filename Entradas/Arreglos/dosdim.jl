@@ -92,28 +92,28 @@ end;
 
 println("MATRIZ a");
 printMatriz(a);
-
+println();
 println("MATRIZ b");
 printMatriz(b);
 
-
+println();
 println("LAS DOS MATRICES SUMADAS");
 println(sumarMatrices(a, b,auxiliar));
 
-
+println();
 println("COMPARAR MATRICES. SON IGUALES?");
 println(compararMatrices(a, b));
 
-
+println();
 println("Pop Matriz a");
 println(pop!(a));
 
-
+println();
 println("Push a b");
 push!(b, [3010.1999]);
 printMatriz(b);
 
 b = a;
-
+println();
 println("COMPARAR MATRICES. SON IGUALES?");
 println(compararMatrices(a, b));

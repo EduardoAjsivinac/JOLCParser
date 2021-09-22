@@ -8,34 +8,32 @@ class InstruccionLlamadaFuncion(Nodo):
         super().__init__(valor, id_nodo, texto, fila=fila, columna=columna, tipo=tipo)
     
     def execute(self, enviroment):
-        
-        id = self.hijos[0].texto
-        nuevoEntorno = Entorno(id, TipoEntorno.funcion)
-        nuevoEntorno.copiarAFuncion(enviroment)
-        funcion2 = nuevoEntorno.findSymbol(id)
-        self.tipo = DataType.nothing
-        self.valor = None
-        if funcion2 != None:
-            funcion = deepcopy(funcion2)
-            arregloFuncion = funcion['parametros_arr']
-            if (funcion['clase']=='funcion'):
-                if (len(arregloFuncion) == 0):
-                    nuevoEntorno.tipoEntorno=TipoEntorno.funcion
-                    nuevoEntorno.addEnviroments(nuevoEntorno)
-                    funcion['instrucciones'].execute(nuevoEntorno)
-                    self.tipo = funcion['instrucciones'].tipo
-                    self.valor = funcion['instrucciones'].valor
+        nombre_funcion = self.hijos[0].texto
+        dato = enviroment.findSymbol(nombre_funcion)
+        if dato!= None:
+            if (dato['clase']=="funcion"):
+                nuevo_entorno = Entorno(nombre_funcion,TipoEntorno.funcion)
+                nuevo_entorno.copiarFunciones(enviroment)
+                tmpFuncion = nuevo_entorno.findSymbol(nombre_funcion)
+                
+                if (tmpFuncion != None):
+                    parametros_solicitados =  tmpFuncion['parametros_arr']
+                    nodo_instrucciones = deepcopy(tmpFuncion['instrucciones'])
+                    if (len(parametros_solicitados)==0):
+                        # Se verificó la cantidad de parametros enviados y solicitados.
+                        nodo_instrucciones.execute(nuevo_entorno)
+                        self.tipo = nodo_instrucciones.tipo
+                        self.valor = nodo_instrucciones.valor
+                        enviroment.concatErrors(nuevo_entorno.pilaErrores)
+                        enviroment.consolaSalida +=nuevo_entorno.consolaSalida
+                        enviroment.copiarValores(nuevo_entorno)
+                    else:
+                        descripcion = "La funcion <b>"+nombre_funcion+"</b> requiere parametros"
+                        enviroment.addError(descripcion, self.hijos[0].fila, self.hijos[0].columna)
+                        return
                 else:
-                    descripcion = "El numero de parametros enviados <b>0</b> no coincide con el numero solicitado por la funcion <b>" +str(len(funcion['parametros_arr']))+"</b>" 
-                    nuevoEntorno.addError(descripcion, self.hijos[0].fila, self.hijos[0].columna)
-            else:
-                descripcion = "<b>"+str(id)+"</b> no es una funcion"
-                nuevoEntorno.addError(descripcion, self.hijos[0].fila, self.hijos[0].columna)
-        else:
-            descripcion = "La función <b>"+str(id)+"</b> no está definida"
-            nuevoEntorno.addError(descripcion, self.hijos[0].fila, self.hijos[0].columna)
-        enviroment.concatErrors(nuevoEntorno.pilaErrores)
-        enviroment.consolaSalida +=nuevoEntorno.consolaSalida
+                    descripcion = "La función <b>"+nombre_funcion+"</b> no existe."
+                    enviroment.addError(descripcion,self.hijos[0].fila, self.hijos[0].columna)
         
         
     def getC3D(self):

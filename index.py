@@ -15,6 +15,7 @@ sys.setrecursionlimit(10000)
 app = Flask(__name__)
 
 global analizo
+global tabla_errores
 analizo = False
 dotresult = ""
 tabla_simbolos = []
@@ -26,7 +27,9 @@ def home():
 
 @app.route('/workarea')
 def workarea():
-    archivo = open("Entradas/Funciones/recursivas.jl")
+    global analizo
+    analizo = False
+    archivo = open("Entradas/prueba.jl")
     entrada=""
     for linea in archivo:
         entrada+=str(linea)
@@ -37,16 +40,27 @@ def parser():
     global analizo
     global dotresult
     global tabla_simbolos
-    analizo = True
+    global tabla_errores
+    
     entrada = request.json['entrada']
     resultado = run_method(entrada)
-    nuevoEntorno = Entorno("general", TipoEntorno.eglobal)
-    resultado.execute(nuevoEntorno)
-    dotresult = "digraph G {" + resultado.getdot()+ "}"
-    #tabla_simbolos = nuevoEntorno.getTable().simbolos
+    # { raiz, errores }
+    if len(resultado['errores']) == 0:
+        analizo = True
+        nuevoEntorno = Entorno("general", TipoEntorno.eglobal)
+        resultado['raiz'].execute(nuevoEntorno)
+        dotresult = "digraph G {" + resultado['raiz'].getdot()+ "}"
+        nuevoEntorno.listaEntornosReporte['global'] = nuevoEntorno.diccionarioSimbolos['general']
+        tabla_simbolos = nuevoEntorno.listaEntornosReporte
+        tabla_errores = nuevoEntorno.pilaErrores 
+        dataresult={
+            "errores": nuevoEntorno.pilaErrores,
+            "data": nuevoEntorno.consolaSalida
+        }
+        return dataresult
     dataresult={
-        "errores": nuevoEntorno.pilaErrores,
-        "data": nuevoEntorno.consolaSalida
+        "errores": resultado['errores'],
+        "data": ""
     }
     return dataresult
 
@@ -55,9 +69,9 @@ def reports():
     global analizo
     global dotresult
     global tabla_simbolos
+    global tabla_errores
     if (analizo):
         conn = http.client.HTTPSConnection("quickchart.io")
-        print(dotresult)
         payload = json.dumps({
             "graph": dotresult,
             "layout": "dot",
@@ -72,9 +86,7 @@ def reports():
         f = open("static/images/tree.svg","w")
         f.write(data.decode("utf-8"))
         f.close()
-        for x in tabla_simbolos:
-            print(tabla_simbolos[x].value)
-        return render_template('html/reports.html', project_name = "JOLC Parser", tabla_simbolos = tabla_simbolos)
+        return render_template('html/reports.html', project_name = "JOLC Parser", tabla_simbolos = tabla_simbolos, tabla_errores = tabla_errores)
     return redirect(url_for('workarea'))
 
 @app.route("/getSVGImage")

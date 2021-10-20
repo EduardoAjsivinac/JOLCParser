@@ -18,6 +18,9 @@ class AtributoNoGenerico(Nodo):
         else:
             descripcion = "El atributo <b>" + self.hijos[0].texto +"</b> ya está declarado en esta estructura"
             enviroment.addError(descripcion,self.hijos[0].fila, self.hijos[0].columna)
+        
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

@@ -13,7 +13,9 @@ class NodeListaExpresiones(Nodo):
             x.execute(enviroment)
             if (x.tipo == DataType.error):
                 self.tipo = DataType.error
-        
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

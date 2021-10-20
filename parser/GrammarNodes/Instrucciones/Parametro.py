@@ -18,7 +18,10 @@ class Parametro(Nodo):
             self.valor = self.hijos[0].texto
             self.fila = self.hijos[0].fila
             self.columna = self.hijos[0].columna
-        
 
-    def getC3D(self):
+    
+    def createTable(self, simbolTable):
+        pass
+        
+    def getC3D(self,symbolTable):
         pass

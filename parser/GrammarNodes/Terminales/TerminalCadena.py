@@ -8,6 +8,9 @@ class TerminalCadena(Nodo):
 
     def execute(self, enviroment):
         pass
+    
+    def createTable(self, simbolTable):
+        self.size = len(self.valor)+1
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

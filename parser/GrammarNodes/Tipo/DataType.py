@@ -331,6 +331,7 @@ matrizchecker = {
         }
 }
 
+
 merror = {DataType.error:DataType.error}
 
 
@@ -352,3 +353,27 @@ def TypeChecker(op, enviroment, firstnode, secondnode):
             descripcion = "<b>"+ firstType.name + "</b> es incompatible con <b>"+ secondType.name + "</b> para la operacion <b>" + op + "</b>"
         enviroment.addError(descripcion, secondnode.fila, secondnode.columna)
     return tipo
+
+def TypeCheckerC3DTable(op, tablaSimbolos, firstnode, secondnode):
+    # Se crea la matriz de validaciones
+    firstType = firstnode.tipo
+    secondType = secondnode.tipo
+    tipo = matrizchecker.get(op,merror).get(firstType,merror).get(secondType,merror.get(DataType.error))
+    if (tipo!= DataType.error):
+        return tipo
+    if (firstType != DataType.error and secondType != DataType.error):
+        descripcion =""
+        if(firstnode.isIdentifier and not firstnode.identifierDeclare):
+            descripcion = "La variable <b>" + firstnode.texto + "</b> no está declarada"
+        elif(secondnode.isIdentifier and not secondnode.identifierDeclare):
+            descripcion = "La variable <b>" + secondnode.texto + "</b> no está declarada"
+        else:
+            descripcion = "<b>"+ firstType.name + "</b> es incompatible con <b>"+ secondType.name + "</b> para la operacion <b>" + op + "</b>"
+        #tablaSimbolos.agregarError(descripcion, secondnode.fila, secondnode.columna,"tipo")
+    return tipo
+
+def getSize(tipo, valor):
+    if(tipo != DataType.string):
+        return 1
+    else:
+        return len(str(valor))

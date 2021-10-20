@@ -8,6 +8,9 @@ class TerminalDecimal(Nodo):
 
     def execute(self, enviroment):
         pass
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

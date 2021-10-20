@@ -22,7 +22,11 @@ class NodeAgrupacion(Nodo):
         self.isBreak = self.hijos[1].isBreak
 
 
+    def createTable(self, simbolTable):
+        # ( EXPRESION )
+        self.hijos[1].createTable(simbolTable)
+        self.tipo = self.hijos[1].tipo
 
-
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass
+    

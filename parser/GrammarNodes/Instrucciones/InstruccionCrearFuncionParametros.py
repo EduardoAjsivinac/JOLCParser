@@ -40,7 +40,9 @@ class InstruccionCrearFuncionParametros(Nodo):
                 enviroment.addError(descripcion, self.fila, self.columna)
         if(not hayError):
             enviroment.addFunction(idFuncion, nodoCuerpo, self.fila, self.columna, dictParam, arrParam)
+    
+    def createTable(self, simbolTable):
+        pass
 
-
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

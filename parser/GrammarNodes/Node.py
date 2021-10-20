@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from parser.Entorno.SymbolTable import SymbolTable
 from parser.GrammarNodes.Tipo.DataType import DataType
 from parser.Entorno.Entorno import Entorno
 import sys
@@ -19,6 +20,9 @@ class Nodo(metaclass=ABCMeta):
         self.isBreak = False
         self.isReturn = False
         self.arraySize = 0
+        self.expresion = ""
+        self.referencia = ""
+        self.size = 1
 
     def getid(self):
         return str(self.id_nodo)
@@ -51,5 +55,9 @@ class Nodo(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def getC3D(self):
+    def createTable(self, simbolTable : SymbolTable):
+        pass
+
+    @abstractmethod
+    def getC3D(self, symbolTable):
         pass

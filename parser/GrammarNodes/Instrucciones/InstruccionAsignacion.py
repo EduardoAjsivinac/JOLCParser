@@ -1,5 +1,6 @@
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
+from ..Tipo import getSize
 
 class InstruccionAsignacion(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo= None):
@@ -19,6 +20,11 @@ class InstruccionAsignacion(Nodo):
             else:
                 enviroment.updateSymbol(ident, self.fila, self.columna, self.hijos[2].valor, self.tipo)
 
+    def createTable(self, simbolTable):
+        self.hijos[0].createTable(simbolTable)
+        self.hijos[2].createTable(simbolTable)
+        simbolTable.insertSymbolEntity(self.hijos[0].texto, self.hijos[2].tipo, self.hijos[2].size)
+        
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

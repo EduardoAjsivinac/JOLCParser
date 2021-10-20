@@ -13,6 +13,9 @@ class InstruccionReturnValor(Nodo):
         self.fila = self.hijos[0].fila
         self.columna = self.hijos[0].columna
         self.isReturn = True
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

@@ -18,7 +18,10 @@ class NodeNot(Nodo):
             else:
                 descripcion = "El tipo de dato debe ser booleano"
             enviroment.addError(descripcion, self.hijos[1].fila, self.hijos[1].columna)
+    
+    def createTable(self, simbolTable):
+        pass
 
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

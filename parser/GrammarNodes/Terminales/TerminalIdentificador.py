@@ -19,5 +19,8 @@ class TerminalIdentificador(Nodo):
             self.valor = None
             self.tipo = DataType.nothing
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+
+    def getC3D(self,symbolTable):
         pass

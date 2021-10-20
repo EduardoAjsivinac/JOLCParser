@@ -20,5 +20,14 @@ class InstruccionDeclaracion(Nodo):
                 descripcion = "El tipo " + str(tipo1.name) + " no coincide con " + str(tipo2.name)
                 enviroment.addError(descripcion, fila, columna)
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        self.hijos[0].createTable(simbolTable)
+        self.hijos[2].createTable(simbolTable)
+        if (self.hijos[4].tipo == self.hijos[2].tipo):
+            simbolTable.insertSymbolEntity(self.hijos[0].texto, self.hijos[2].tipo, self.hijos[2].size)
+        else:
+            descripcion = "El tipo <b>" + str(self.hijos[2].tipo.name) + "</b> no coincide con <b>" + str(self.hijos[4].tipo.name)+"</b>"
+            simbolTable.agregarError(descripcion, self.hijos[4].fila, self.hijos[4].columna,"simbolo")
+
+    def getC3D(self,symbolTable):
         pass

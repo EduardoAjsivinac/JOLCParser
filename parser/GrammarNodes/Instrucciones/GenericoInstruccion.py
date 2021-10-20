@@ -36,7 +36,10 @@ class GenericoInstruccion(Nodo):
                 else:
                     descripcion = "La instruccion continue se debe definir dentro de una funcion"
                     enviroment.addError(descripcion,x.hijos[0].fila,x.hijos[0].columna)
+    
+    def createTable(self, simbolTable):
+        for x in self.hijos:
+            x.createTable(simbolTable)
 
-
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

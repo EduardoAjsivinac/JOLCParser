@@ -9,5 +9,8 @@ class GenericoExpresion(Nodo):
         self.tipo = DataType.nothing
         self.valor = None
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+
+    def getC3D(self,symbolTable):
         pass

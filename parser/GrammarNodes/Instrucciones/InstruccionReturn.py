@@ -10,5 +10,8 @@ class InstruccionReturn(Nodo):
         self.isReturn = True
         self.tipo = DataType.nothing
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+    
+    def getC3D(self,symbolTable):
         pass

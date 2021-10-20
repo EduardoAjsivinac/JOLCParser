@@ -1,6 +1,7 @@
 from ...Node import Nodo
 from ...Tipo import DataType
 from ...Tipo import TypeChecker
+from ...Tipo import TypeCheckerC3DTable
 
 class NodeMultiplicacion(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna = -1):
@@ -18,5 +19,12 @@ class NodeMultiplicacion(Nodo):
                 self.valor = self.hijos[0].valor + self.hijos[2].valor
         self.tipo = type
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        self.hijos[0].createTable(simbolTable)
+        self.hijos[2].createTable(simbolTable)
+        self.tipo = TypeCheckerC3DTable('*',simbolTable, self.hijos[0], self.hijos[2])
+        if self.tipo == DataType.string:
+            self.size = self.hijos[0].size + self.hijos[2].size+1
+
+    def getC3D(self,symbolTable):
         pass

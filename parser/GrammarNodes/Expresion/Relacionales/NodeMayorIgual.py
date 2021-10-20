@@ -14,5 +14,8 @@ class NodeMayorIgual(Nodo):
             self.valor = self.hijos[0].valor >= self.hijos[2].valor
         self.tipo = type
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+
+    def getC3D(self,symbolTable):
         pass

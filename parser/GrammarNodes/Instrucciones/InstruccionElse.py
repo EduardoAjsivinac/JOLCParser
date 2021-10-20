@@ -13,7 +13,9 @@ class InstruccionElse(Nodo):
         self.isReturn = self.hijos[1].isReturn
         self.isContinue = self.hijos[1].isContinue
         self.isBreak = self.hijos[1].isBreak
-        
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

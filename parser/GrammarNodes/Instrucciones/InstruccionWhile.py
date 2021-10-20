@@ -33,7 +33,8 @@ class InstruccionWhile(Nodo):
                 sigueCiclo=False
         enviroment.tipoEntorno = tipoEntorno
 
-        
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

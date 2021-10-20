@@ -12,6 +12,9 @@ class TerminalArreglo(Nodo):
         for x in range(0,len(self.hijos[1].hijos),2):
             self.valor.append(self.hijos[1].hijos[x])
         self.arraySize = len(self.valor)
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

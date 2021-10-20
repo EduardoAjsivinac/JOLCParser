@@ -16,5 +16,8 @@ class InstruccionAsignacionAtributoStruct(Nodo):
         self.valor = self.hijos[0].valor
         self.tipo = self.hijos[0].tipo
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+
+    def getC3D(self,symbolTable):
         pass

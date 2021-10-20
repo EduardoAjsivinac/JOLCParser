@@ -27,6 +27,9 @@ class InstruccionElseIf(Nodo):
         else:
             descripcion = "La instrucción IF requiere una expresión booleana"
             enviroment.addError(descripcion, self.hijos[0].fila, self.hijos[0].columna)
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

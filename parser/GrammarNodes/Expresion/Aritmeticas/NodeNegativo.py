@@ -1,6 +1,7 @@
 from ...Node import Nodo
 from ...Tipo import DataType
 from ...Tipo import TypeChecker
+from ...Tipo import TypeCheckerC3DTable
 
 class NodeNegativo(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna = -1):
@@ -26,5 +27,8 @@ class NodeNegativo(Nodo):
             enviroment.addError(descripcion,self.fila, self.columna)
             self.tipo = DataType.error
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        self.tipo = self.hijos[1].tipo
+
+    def getC3D(self,symbolTable):
         pass

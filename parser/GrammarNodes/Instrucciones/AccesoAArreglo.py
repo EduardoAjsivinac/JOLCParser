@@ -20,7 +20,10 @@ class AccesoAArreglo(Nodo):
                 listaPosiciones.append(x.valor)
                 self.tipo = DataType.generic
                 self.valor = listaPosiciones
+
+    def createTable(self, simbolTable):
+        pass
             
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

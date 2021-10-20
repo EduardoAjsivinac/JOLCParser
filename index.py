@@ -64,6 +64,33 @@ def parser():
     }
     return dataresult
 
+@app.route('/translate', methods=['POST'])
+def translate():
+    global analizo
+    global dotresult
+    global tabla_simbolos
+    global tabla_errores
+    
+    entrada = request.json['entrada']
+    resultado = run_method(entrada)
+    # { raiz, errores }
+    if len(resultado['errores']) == 0:
+        analizo = True
+        tablaSimbolos = SymbolTable("Global")
+        resultado['raiz'].createTable(tablaSimbolos)
+        tablaSimbolos.imprimir()
+        dotresult = "digraph G {" + resultado['raiz'].getdot()+ "}"
+        dataresult={
+            "errores": tablaSimbolos.erroresSalida,
+            "data": ""
+        }
+        return dataresult
+    dataresult={
+        "errores": resultado['errores'],
+        "data": ""
+    }
+    return dataresult
+
 @app.route('/reports')
 def reports():
     global analizo
@@ -86,7 +113,8 @@ def reports():
         f = open("static/images/tree.svg","w")
         f.write(data.decode("utf-8"))
         f.close()
-        return render_template('html/reports.html', project_name = "JOLC Parser", tabla_simbolos = tabla_simbolos, tabla_errores = tabla_errores)
+        # return render_template('html/reports.html', project_name = "JOLC Parser", tabla_simbolos = tabla_simbolos, tabla_errores = tabla_errores)
+        return render_template('html/reports.html', project_name = "JOLC Parser")
     return redirect(url_for('workarea'))
 
 @app.route("/getSVGImage")

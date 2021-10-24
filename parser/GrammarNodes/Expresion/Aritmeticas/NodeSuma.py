@@ -3,6 +3,7 @@ from ...Tipo import DataType
 from ...Tipo import TypeChecker
 from ...Tipo import TypeCheckerC3DTable
 from ...Tipo import TypeCheckerC3DTable
+from ...C3D import C3DAux
 
 class NodeSuma(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna = -1):
@@ -24,4 +25,6 @@ class NodeSuma(Nodo):
         
 
     def getC3D(self,symbolTable):
-        pass
+        self.hijos[0].getC3D(symbolTable)
+        self.hijos[2].getC3D(symbolTable)
+        C3DAux().traducirAritmetica("+",self.hijos[0],self.hijos[2], symbolTable,self)

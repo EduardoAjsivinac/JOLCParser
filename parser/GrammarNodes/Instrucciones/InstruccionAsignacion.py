@@ -1,3 +1,4 @@
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
 from ..Tipo import getSize
@@ -27,4 +28,16 @@ class InstruccionAsignacion(Nodo):
         
 
     def getC3D(self,symbolTable):
-        pass
+        self.hijos[2].getC3D(symbolTable)
+        # La tiene que encontrar, ya que inicialmente se realizó una búsqueda de variables
+        nuevaVar = symbolTable.findSymbol(self.hijos[0].texto)
+        if nuevaVar!= None:
+            C3DAux().convertirEtiquetas(self.hijos[2])
+            self.expresion += self.hijos[2].expresion
+            self.referencia = C3DAux().getTemp()
+            self.expresion += str(self.referencia) + " = " + str(nuevaVar.posicion) + ";\n"
+            self.expresion += str(C3DAux().getArreglo())+"[(int)" + str(self.referencia)+"] = " + str(self.hijos[2].referencia) + ";\n"
+        else:
+            print("Existe un error de implementación")
+        
+        

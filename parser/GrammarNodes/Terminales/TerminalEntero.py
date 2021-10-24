@@ -13,4 +13,5 @@ class TerminalEntero(Nodo):
         pass
 
     def getC3D(self,symbolTable):
-        pass
+        self.expresion=""
+        self.referencia = self.texto

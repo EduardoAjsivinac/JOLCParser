@@ -1,3 +1,4 @@
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from ...Node import Nodo
 from ...Tipo import DataType
 from ...Tipo import TypeChecker
@@ -22,4 +23,6 @@ class NodeResta(Nodo):
         self.tipo = TypeCheckerC3DTable('-',simbolTable, self.hijos[0], self.hijos[2])
 
     def getC3D(self,symbolTable):
-        pass
+        self.hijos[0].getC3D(symbolTable)
+        self.hijos[2].getC3D(symbolTable)
+        C3DAux().traducirAritmetica("-",self.hijos[0],self.hijos[2], symbolTable,self)

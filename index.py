@@ -3,6 +3,7 @@ import json
 from flask import send_file
 from flask import Response
 from flask.helpers import url_for
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from parser.gramatica import run_method
 from parser.Entorno import *
 from flask import Flask
@@ -19,6 +20,17 @@ global tabla_errores
 analizo = False
 dotresult = ""
 tabla_simbolos = []
+
+def crearC3D(entrada, tablaSimbolos):
+    textoRetorno = '''package main
+import ( "fmt" )
+var stack [1000]float64
+var heap [1000]float64
+var '''
+    for i in range(0,C3DAux().temp-1):
+        textoRetorno += "t" + str(i)+ ", "
+    textoRetorno += "t" + str(C3DAux().temp) + " float64;\n"
+    return textoRetorno + entrada
 
 
 @app.route('/')
@@ -75,14 +87,19 @@ def translate():
     resultado = run_method(entrada)
     # { raiz, errores }
     if len(resultado['errores']) == 0:
+        C3DAux().label = 0
+        C3DAux().temp = 0
         analizo = True
         tablaSimbolos = SymbolTable("Global")
         resultado['raiz'].createTable(tablaSimbolos)
-        tablaSimbolos.imprimir()
+        resultado['raiz'].expresion = "main(){\n"
+        resultado['raiz'].getC3D(tablaSimbolos)
+        resultado['raiz'].expresion += "}\n"
+        consolaSalida = crearC3D(resultado['raiz'].expresion,tablaSimbolos)
         dotresult = "digraph G {" + resultado['raiz'].getdot()+ "}"
         dataresult={
             "errores": tablaSimbolos.erroresSalida,
-            "data": ""
+            "data": consolaSalida
         }
         return dataresult
     dataresult={

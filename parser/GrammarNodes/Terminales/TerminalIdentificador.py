@@ -1,3 +1,4 @@
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from ..Node import Nodo
 from ..Tipo import DataType
 from ..Tipo import TypeChecker
@@ -23,4 +24,18 @@ class TerminalIdentificador(Nodo):
         pass
 
     def getC3D(self,symbolTable):
-        pass
+        atributo = symbolTable.findSymbol(self.texto)
+        
+        if atributo != None:
+            
+            if atributo != DataType.string:
+                tmp = C3DAux().getTemp()
+                self.referencia = C3DAux().getTemp()
+                self.expresion += str(tmp) + " = " + str(atributo.posicion) + ";\n"
+                self.expresion += str(self.referencia) + " = heap[(int)" + str(tmp) + "];\n"
+                self.tipo = atributo.tipo
+                
+        else:
+            descrpicion = "No existe la variable <b>"+self.texto+"</b>"
+            self.tipo = DataType.error
+            symbolTable.agregarError(descrpicion, self.fila, self.columna, "simbolo")

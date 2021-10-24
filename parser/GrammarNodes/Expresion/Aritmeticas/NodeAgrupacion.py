@@ -28,5 +28,10 @@ class NodeAgrupacion(Nodo):
         self.tipo = self.hijos[1].tipo
 
     def getC3D(self,symbolTable):
-        pass
+        self.hijos[1].getC3D(symbolTable)
+        self.expresion = self.hijos[1].expresion
+        self.referencia = self.hijos[1].referencia
+        self.tipo = self.hijos[1].tipo
+        self.ef = self.hijos[1].ef
+        self.ev = self.hijos[1].ev
     

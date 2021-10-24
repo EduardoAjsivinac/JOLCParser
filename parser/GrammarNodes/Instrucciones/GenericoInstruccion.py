@@ -42,4 +42,12 @@ class GenericoInstruccion(Nodo):
             x.createTable(simbolTable)
 
     def getC3D(self,symbolTable):
-        pass
+        for x in self.hijos:
+            x.getC3D(symbolTable)
+            if x.texto == "Instruccion":
+                if x.texto == "Function":
+                    self.expresion = x.expresion + self.expresion
+                else: 
+                    self.expresion += x.expresion
+            else:
+                self.expresion += x.expresion 

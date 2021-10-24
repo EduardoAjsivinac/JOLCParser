@@ -29,7 +29,12 @@ class SymbolTable():
         for x in self.listaSimbolos:
             print(x.nombre, x.tipo.name, x.tam, x.entorno, x.posicion, x.isGlobal)
 
-
+    def findSymbol(self, nombre):
+        # buscar si existe la variable.
+        for x in self.listaSimbolos:
+            if x.nombre == nombre and x.entorno == self.nombreEntorno:
+                return x
+        return None
 
 
 class SymbolEntity():

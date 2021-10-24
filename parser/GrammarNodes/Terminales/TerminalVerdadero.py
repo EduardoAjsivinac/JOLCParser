@@ -1,6 +1,7 @@
 from ..Node import Nodo
 from ..Tipo import DataType
 from ..Tipo import TypeChecker
+from ..C3D import C3DAux
 
 class TerminalVerdadero(Nodo):
     def __init__(self, valor, id_nodo, texto, fila, columna, tipo):
@@ -13,4 +14,5 @@ class TerminalVerdadero(Nodo):
         pass
 
     def getC3D(self,symbolTable):
-        pass
+        self.referencia = C3DAux().getTemp()
+        self.expresion = str(self.referencia) + " = 1;\n"

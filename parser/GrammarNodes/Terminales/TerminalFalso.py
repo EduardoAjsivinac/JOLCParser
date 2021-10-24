@@ -1,3 +1,4 @@
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from ..Node import Nodo
 from ..Tipo import DataType
 from ..Tipo import TypeChecker
@@ -13,4 +14,5 @@ class TerminalFalso(Nodo):
         pass
 
     def getC3D(self,symbolTable):
-        pass
+        self.referencia = C3DAux().getTemp()
+        self.expresion = str(self.referencia) + " = 0;\n"

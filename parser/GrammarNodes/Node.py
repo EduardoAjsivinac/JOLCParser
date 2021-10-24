@@ -23,6 +23,8 @@ class Nodo(metaclass=ABCMeta):
         self.expresion = ""
         self.referencia = ""
         self.size = 1
+        self.ev = []
+        self.ef = []
 
     def getid(self):
         return str(self.id_nodo)
@@ -59,5 +61,5 @@ class Nodo(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def getC3D(self, symbolTable):
+    def getC3D(self, symbolTable : SymbolTable):
         pass

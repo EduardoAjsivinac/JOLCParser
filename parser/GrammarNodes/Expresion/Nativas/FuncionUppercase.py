@@ -1,3 +1,4 @@
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from ...Node import Nodo
 from ...Tipo import DataType
 from ...Tipo import TypeChecker
@@ -19,4 +20,6 @@ class FuncionUppercase(Nodo):
         pass
 
     def getC3D(self,symbolTable):
-        pass
+        self.hijos[2].getC3D(symbolTable)
+        C3DAux().traducirCase(self,self.hijos[2],symbolTable, True)
+        

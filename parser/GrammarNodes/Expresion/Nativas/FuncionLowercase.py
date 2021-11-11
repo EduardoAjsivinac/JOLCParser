@@ -1,6 +1,7 @@
 from ...Node import Nodo
 from ...Tipo import DataType
 from ...Tipo import TypeChecker
+from ...C3D import C3DAux
 
 class FuncionLowercase(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna = -1):
@@ -19,4 +20,5 @@ class FuncionLowercase(Nodo):
         pass
 
     def getC3D(self,symbolTable):
-        pass
+        self.hijos[2].getC3D(symbolTable)
+        C3DAux().traducirCase(self,self.hijos[2],symbolTable, False)

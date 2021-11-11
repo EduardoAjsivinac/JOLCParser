@@ -32,11 +32,13 @@ class InstruccionAsignacion(Nodo):
         # La tiene que encontrar, ya que inicialmente se realizó una búsqueda de variables
         nuevaVar = symbolTable.findSymbol(self.hijos[0].texto)
         if nuevaVar!= None:
+            tempEtqV = C3DAux().getLabel()
             C3DAux().convertirEtiquetas(self.hijos[2])
             self.expresion += self.hijos[2].expresion
             self.referencia = C3DAux().getTemp()
+            
             self.expresion += str(self.referencia) + " = " + str(nuevaVar.posicion) + ";\n"
-            self.expresion += str(C3DAux().getArreglo())+"[(int)" + str(self.referencia)+"] = " + str(self.hijos[2].referencia) + ";\n"
+            self.expresion += str(C3DAux().getArreglo())+"[int(" + str(self.referencia)+")] = " + str(self.hijos[2].referencia) + ";\n"
         else:
             print("Existe un error de implementación")
         

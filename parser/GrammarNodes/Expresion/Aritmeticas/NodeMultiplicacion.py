@@ -25,7 +25,7 @@ class NodeMultiplicacion(Nodo):
         self.hijos[2].createTable(simbolTable)
         self.tipo = TypeCheckerC3DTable('*',simbolTable, self.hijos[0], self.hijos[2])
         if self.tipo == DataType.string:
-            self.size = self.hijos[0].size + self.hijos[2].size+1
+            self.size = self.hijos[0].size + self.hijos[2].size
 
     def getC3D(self,symbolTable):
         self.hijos[0].getC3D(symbolTable)

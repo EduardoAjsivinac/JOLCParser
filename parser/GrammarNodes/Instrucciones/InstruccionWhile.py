@@ -1,6 +1,7 @@
 from parser.Entorno.Entorno import TipoEntorno
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
+from ..C3D import C3DAux
 
 class InstruccionWhile(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna = -1):
@@ -34,7 +35,22 @@ class InstruccionWhile(Nodo):
         enviroment.tipoEntorno = tipoEntorno
 
     def createTable(self, simbolTable):
-        pass
+        simbolTable.agregarEntorno("while")
+        self.hijos[2].createTable(simbolTable)
+        simbolTable.eliminarEntorno()
 
     def getC3D(self,symbolTable):
-        pass
+        self.hijos[1].getC3D(symbolTable) # expresion
+        symbolTable.agregarEntorno("while")
+        self.hijos[2].getC3D(symbolTable)
+        self.isReturn = self.hijos[2].isReturn
+        self.isContinue = self.hijos[2].isContinue
+        self.isBreak = self.hijos[2].isBreak
+        self.etBreak = self.hijos[2].etBreak
+        self.etReturn = self.hijos[2].etReturn
+        self.etContinue = self.hijos[2].etContinue
+        C3DAux().traducirWhile(self.hijos[1], self.hijos[2], self)
+        if(self.isBreak):
+            self.expresion += str(self.etBreak)+":\n"
+        symbolTable.eliminarEntorno()
+        

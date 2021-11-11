@@ -51,3 +51,34 @@ class GenericoInstruccion(Nodo):
                     self.expresion += x.expresion
             else:
                 self.expresion += x.expresion 
+            if(x.isReturn):
+                if (symbolTable.getTipoEntorno() == "global"): # No está en el entorno global
+                    descripcion = "La instruccion retorno se debe definir dentro de una funcion"
+                    print(descripcion)
+                else:
+                    self.isReturn = True
+                    self.tipo = x.tipo
+                    self.valor = x.valor
+                    self.etReturn = x.etReturn
+                    break
+                    
+            if(x.isBreak):
+                if (symbolTable.getTipoEntorno() != "global"):
+                    self.isBreak = True
+                    self.tipo = x.tipo
+                    self.valor = x.valor
+                    self.etBreak = x.etBreak
+                    
+                else:
+                    descripcion = "La instruccion break se debe definir dentro de una funcion"
+                    print(descripcion)
+            if(x.isContinue):
+                if (symbolTable.getTipoEntorno() != "global"):
+                    self.isContinue = True
+                    self.tipo = x.tipo
+                    self.valor = x.valor
+                    self.etContinue = x.etContinue
+                    
+                else:
+                    descripcion = "La instruccion continue se debe definir dentro de una funcion"
+                    print(descripcion)

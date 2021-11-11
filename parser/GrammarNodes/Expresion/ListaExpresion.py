@@ -18,4 +18,5 @@ class NodeListaExpresiones(Nodo):
         pass
 
     def getC3D(self,symbolTable):
-        pass
+        for x in self.hijos:
+            x.getC3D(symbolTable);

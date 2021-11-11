@@ -21,7 +21,8 @@ class NodeNot(Nodo):
             enviroment.addError(descripcion, self.hijos[1].fila, self.hijos[1].columna)
     
     def createTable(self, simbolTable):
-        pass
+        self.hijos[1].createTable(simbolTable)
+        self.tipo = self.hijos[1].tipo
 
 
     def getC3D(self,symbolTable):

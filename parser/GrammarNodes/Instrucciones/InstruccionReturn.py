@@ -1,7 +1,7 @@
 from parser.Entorno.Entorno import TipoEntorno
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
-
+from ..C3D import C3DAux
 class InstruccionReturn(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo= None):
         super().__init__(valor, id_nodo, texto, fila=fila, columna=columna, tipo=tipo)
@@ -14,4 +14,7 @@ class InstruccionReturn(Nodo):
         pass
     
     def getC3D(self,symbolTable):
-        pass
+        self.isReturn = True
+        self.tipo = DataType.nothing
+        self.etReturn = C3DAux().getLabel()
+        self.expresion += "goto "+str(self.etReturn) + "\n"

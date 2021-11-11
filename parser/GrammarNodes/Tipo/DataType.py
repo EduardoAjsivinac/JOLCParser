@@ -328,7 +328,37 @@ matrizchecker = {
             },DataType.string : {
                 DataType.string : DataType.bool
             }
-        }
+        },
+    '||' : {
+            DataType.int64 : {
+                DataType.int64 : DataType.bool,
+                DataType.float64 : DataType.bool,
+                DataType.bool : DataType.bool
+            },DataType.float64 : {
+                DataType.int64 : DataType.bool,
+                DataType.float64 : DataType.bool,
+                DataType.bool : DataType.bool
+            },DataType.bool : {
+                DataType.int64 : DataType.bool,
+                DataType.float64 : DataType.bool,
+                DataType.bool : DataType.bool
+            }
+        },
+    '&&' : {
+            DataType.int64 : {
+                DataType.int64 : DataType.bool,
+                DataType.float64 : DataType.bool,
+                DataType.bool : DataType.bool
+            },DataType.float64 : {
+                DataType.int64 : DataType.bool,
+                DataType.float64 : DataType.bool,
+                DataType.bool : DataType.bool
+            },DataType.bool : {
+                DataType.int64 : DataType.bool,
+                DataType.float64 : DataType.bool,
+                DataType.bool : DataType.bool
+            }
+        },
 }
 
 

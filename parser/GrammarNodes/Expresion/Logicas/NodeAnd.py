@@ -29,7 +29,9 @@ class NodeAnd(Nodo):
         self.valor = False
 
     def createTable(self, simbolTable):
-        pass
+        self.hijos[0].createTable(simbolTable)
+        self.hijos[2].createTable(simbolTable)
+        self.tipo = TypeCheckerC3DTable('&&',simbolTable, self.hijos[0], self.hijos[2])
 
 
     def getC3D(self,symbolTable):

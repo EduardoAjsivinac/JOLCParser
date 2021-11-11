@@ -17,7 +17,9 @@ class NodeMayorIgual(Nodo):
         self.tipo = type
 
     def createTable(self, simbolTable):
-        pass
+        self.hijos[0].createTable(simbolTable)
+        self.hijos[2].createTable(simbolTable)
+        self.tipo = TypeCheckerC3DTable('>=',simbolTable, self.hijos[0], self.hijos[2])
 
     def getC3D(self,symbolTable):
         self.hijos[0].getC3D(symbolTable)

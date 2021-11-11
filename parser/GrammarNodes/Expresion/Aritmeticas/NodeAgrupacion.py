@@ -34,4 +34,10 @@ class NodeAgrupacion(Nodo):
         self.tipo = self.hijos[1].tipo
         self.ef = self.hijos[1].ef
         self.ev = self.hijos[1].ev
+        self.isReturn = self.hijos[1].isReturn
+        self.isContinue = self.hijos[1].isContinue
+        self.isBreak = self.hijos[1].isBreak
+        self.etBreak = self.hijos[1].etBreak
+        self.etContinue = self.hijos[1].etContinue
+        self.etReturn = self.hijos[1].etReturn
     

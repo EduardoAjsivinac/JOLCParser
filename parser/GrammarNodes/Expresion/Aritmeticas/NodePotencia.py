@@ -1,4 +1,4 @@
-from parser.Entorno.Entorno import Entorno
+from parser.Entorno.Entorno import Entorno, TipoEntorno
 from ...Node import Nodo
 from ...Tipo import DataType
 from ...Tipo import TypeChecker
@@ -25,7 +25,7 @@ class NodePotencia(Nodo):
         self.hijos[2].createTable(simbolTable)
         self.tipo = TypeCheckerC3DTable('^',simbolTable, self.hijos[0], self.hijos[2])
         if self.tipo == DataType.string:
-            enviroment = Entorno("")
+            enviroment = Entorno("Global", TipoEntorno.eglobal)
             self.hijos[2].execute(enviroment)
             self.size = self.hijos[0].size * self.hijos[2].valor
 

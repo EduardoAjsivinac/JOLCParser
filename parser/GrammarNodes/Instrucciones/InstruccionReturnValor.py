@@ -1,5 +1,6 @@
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
+from ..C3D import C3DAux
 
 class InstruccionReturnValor(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo= None):
@@ -18,4 +19,9 @@ class InstruccionReturnValor(Nodo):
         pass
 
     def getC3D(self,symbolTable):
-        pass
+        self.isReturn = True
+        self.tipo = DataType.nothing
+        self.hijos[1].getC3D(symbolTable)
+        self.etReturn = C3DAux().getLabel()
+        self.expresion += "stack[0] = " + str( self.hijos[1].referencia) + "\n"
+        self.expresion += "goto "+str(self.etReturn) + "\n"

@@ -33,6 +33,7 @@ class NodeNegativo(Nodo):
 
     def getC3D(self,symbolTable):
         self.hijos[1].getC3D(symbolTable)
+
         self.expresion = self.hijos[1].expresion
         self.tipo = self.hijos[1].tipo
         if self.tipo == DataType.int64 or self.tipo == DataType.float64:
@@ -55,3 +56,11 @@ class NodeNegativo(Nodo):
             self.expresion +=str(self.referencia) + " = " + str(self.hijos[1].referencia) + " * " +str(neg) + "; \n"
         else:
             self.tipo = DataType.error
+
+        
+        self.isReturn = self.hijos[1].isReturn
+        self.isContinue = self.hijos[1].isContinue
+        self.isBreak = self.hijos[1].isBreak
+        self.etBreak = self.hijos[1].etBreak
+        self.etContinue = self.hijos[1].etContinue
+        self.etReturn = self.hijos[1].etReturn

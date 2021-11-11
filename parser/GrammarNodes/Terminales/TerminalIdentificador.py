@@ -21,19 +21,22 @@ class TerminalIdentificador(Nodo):
             self.tipo = DataType.nothing
 
     def createTable(self, simbolTable):
-        pass
+        nodo = simbolTable.findSymbol(self.texto)
+        if nodo != None:
+            self.tipo = nodo.tipo
 
     def getC3D(self,symbolTable):
         atributo = symbolTable.findSymbol(self.texto)
-        
         if atributo != None:
-            
-            if atributo != DataType.string:
-                tmp = C3DAux().getTemp()
-                self.referencia = C3DAux().getTemp()
-                self.expresion += str(tmp) + " = " + str(atributo.posicion) + ";\n"
-                self.expresion += str(self.referencia) + " = heap[(int)" + str(tmp) + "];\n"
-                self.tipo = atributo.tipo
+            #if atributo.tipo != DataType.string:
+            tmp = C3DAux().getTemp()
+            self.referencia = C3DAux().getTemp()
+            self.expresion += str(tmp) + " = " + str(atributo.posicion) + ";\n"
+            self.expresion += str(self.referencia) + " = heap[int(" + str(tmp) + ")];\n"
+            self.tipo = atributo.tipo
+            #else:
+            #    symbolTable.imprimir()
+            #    print("Cadena")
                 
         else:
             descrpicion = "No existe la variable <b>"+self.texto+"</b>"

@@ -11,6 +11,7 @@ from flask import render_template
 from flask import request
 from flask import redirect
 import sys
+import os
 sys.setrecursionlimit(10000)
 
 app = Flask(__name__)
@@ -23,11 +24,15 @@ tabla_simbolos = []
 
 def crearC3D(entrada, tablaSimbolos):
     textoRetorno = '''package main
-import ( "fmt" )
+import ( '''
+    for x in C3DAux().librerias:
+        textoRetorno+="\"" + str(x) + "\"\n"
+    textoRetorno +=''' )
 var stack [1000]float64
 var heap [1000]float64
+var hp, sp float64
 var '''
-    for i in range(0,C3DAux().temp-1):
+    for i in range(0,C3DAux().temp):
         textoRetorno += "t" + str(i)+ ", "
     textoRetorno += "t" + str(C3DAux().temp) + " float64;\n"
     return textoRetorno + entrada
@@ -82,7 +87,7 @@ def translate():
     global dotresult
     global tabla_simbolos
     global tabla_errores
-    
+    C3DAux().librerias = {}
     entrada = request.json['entrada']
     resultado = run_method(entrada)
     # { raiz, errores }
@@ -90,12 +95,17 @@ def translate():
         C3DAux().label = 0
         C3DAux().temp = 0
         analizo = True
-        tablaSimbolos = SymbolTable("Global")
+        tablaSimbolos = SymbolTable({"nombre": "Global", "numero" : 0})
         resultado['raiz'].createTable(tablaSimbolos)
-        resultado['raiz'].expresion = "main(){\n"
+        tablaSimbolos.imprimir()
+        resultado['raiz'].expresion = "func main(){\n"
+        resultado['raiz'].expresion += "hp = "+str(tablaSimbolos.posicion)+";\n"
         resultado['raiz'].getC3D(tablaSimbolos)
         resultado['raiz'].expresion += "}\n"
         consolaSalida = crearC3D(resultado['raiz'].expresion,tablaSimbolos)
+        file = open("./Entradas/Salida.go", "w")
+        file.write(consolaSalida)
+        file.close()
         dotresult = "digraph G {" + resultado['raiz'].getdot()+ "}"
         dataresult={
             "errores": tablaSimbolos.erroresSalida,

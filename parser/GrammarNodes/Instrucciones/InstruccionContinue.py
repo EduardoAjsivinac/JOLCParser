@@ -1,6 +1,7 @@
 from parser.Entorno.Entorno import TipoEntorno
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
+from ..C3D import C3DAux
 
 class InstruccionContinue(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo= None):
@@ -14,4 +15,7 @@ class InstruccionContinue(Nodo):
         pass
 
     def getC3D(self,symbolTable):
-        pass
+        self.isContinue = True
+        self.tipo = DataType.nothing
+        self.etContinue = C3DAux().getLabel()
+        self.expresion += "goto "+str(self.etContinue) + "\n"

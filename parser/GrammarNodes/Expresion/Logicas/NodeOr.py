@@ -2,6 +2,7 @@ from ...Node import Nodo
 from ...Tipo import DataType
 from ...Tipo import TypeChecker
 from ...C3D import C3DAux
+from ...Tipo import TypeCheckerC3DTable
 
 class NodeOr(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna = -1):
@@ -28,7 +29,9 @@ class NodeOr(Nodo):
         self.valor = False
 
     def createTable(self, simbolTable):
-        pass
+        self.hijos[0].createTable(simbolTable)
+        self.hijos[2].createTable(simbolTable)
+        self.tipo = TypeCheckerC3DTable('||',simbolTable, self.hijos[0], self.hijos[2])
 
 
     def getC3D(self,symbolTable):

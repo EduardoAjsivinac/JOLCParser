@@ -47,13 +47,27 @@ class InstruccionElseIf(Nodo):
             symbolTable.eliminarEntorno()
             self.hijos[3].getC3D(symbolTable)
             self.expresion += self.hijos[3].expresion
+
+            if self.hijos[3].isReturn :
+                self.isReturn = True
+                self.etReturn = self.hijos[3].etReturn
+            if self.hijos[3].isContinue :
+                self.isContinue = True
+                self.etContinue = self.hijos[3].etContinue
+            if self.hijos[3].isBreak :
+                self.isBreak = True
+                self.etBreak = self.hijos[3].etBreak
         
         for x in self.ev:
             self.expresion += str(x) + ":\n" # Si se cumple la condición del primer else if
         
-        self.isReturn = self.hijos[2].isReturn
-        self.isContinue = self.hijos[2].isContinue
-        self.isBreak = self.hijos[2].isBreak
-        self.etBreak = self.hijos[2].etBreak
-        self.etReturn = self.hijos[2].etReturn
-        self.etContinue = self.hijos[2].etContinue
+        if self.hijos[2].isReturn :
+            self.isReturn = True
+            self.etReturn = self.hijos[2].etReturn
+        if self.hijos[2].isContinue :
+            self.isContinue = True
+            self.etContinue = self.hijos[2].etContinue
+        if self.hijos[2].isBreak :
+            self.isBreak = True
+            self.etBreak = self.hijos[2].etBreak
+        

@@ -10,7 +10,13 @@ class ListaParametros(Nodo):
             x.execute(enviroment)
 
     def createTable(self, simbolTable):
-        pass
+        for x in self.hijos:
+            x.createTable(simbolTable)
 
     def getC3D(self,symbolTable):
-        pass
+        print("Lista Parametros")
+        self.expresion += ""
+        for x in self.hijos[0]:
+            x.getC3D(symbolTable)
+            self.expresion += x.expresion
+        

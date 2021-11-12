@@ -1,4 +1,6 @@
 from parser.Entorno.Entorno import Entorno, TipoEntorno
+from parser.GrammarNodes import C3D
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
 from copy import deepcopy
@@ -85,4 +87,31 @@ class InstruccionLlamadaFuncionParam(Nodo):
         pass
 
     def getC3D(self,symbolTable):
-        pass
+        self.hijos[0].getC3D(symbolTable)
+        self.hijos[2].getC3D(symbolTable)
+        func = symbolTable.findSymbol(self.hijos[0].texto)
+        if func != None:
+            if((func.posicion-1)==((len(self.hijos[2].hijos)+1)/2)):# Posicion se utilizó como numero de parametros
+                contador = 0
+                contPosParam = 0
+                for x in self.hijos[2].hijos:
+                    self.expresion += x.expresion
+                tmpEtq = C3DAux().getTemp()
+                self.expresion += str(tmpEtq)+" = sp;\n"
+                for x in self.hijos[2].hijos:
+                    if contador%2==0:
+                        self.expresion += str(tmpEtq)+" = "+str(tmpEtq)+" + 1;\n"
+                        self.expresion += "stack[int("+str(tmpEtq)+")] = " + str(x.referencia) + ";\n"
+                        contPosParam +=1
+                    contador += 1
+                self.expresion += "sp = sp + "+str(C3DAux().obtenerUltima())+"\n"
+                C3DAux().agregarATam(func.tam)
+                self.expresion += str(self.hijos[0].texto) + "();\n"
+                symbolTable.imprimir()
+                
+                self.referencia = C3DAux().getTemp()
+                self.expresion += str(self.referencia) + " = stack[int(sp)];\n"
+                
+                self.expresion += "sp = sp - "+str(C3DAux().obtenerUltima())+"\n"
+            else:
+                print("Los parametros solicitados no coinciden con los enviados", (func.posicion-1),((len(self.hijos[2].hijos)+1)/2))

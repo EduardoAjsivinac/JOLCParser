@@ -9,10 +9,30 @@ class C3DAux(object):
     temp = 0
     arreglo = "heap"
     librerias = {}
+    expresionFunciones = ""
+    listaTamEntornos = []
+    
+    def agregarATam(self,tam):
+        self.listaTamEntornos.append(tam)
+    
+    def eliminarTam(self):
+        return self.listaTamEntornos.pop()
+    
+    def obtenerUltima(self):
+        return self.listaTamEntornos[len(self.listaTamEntornos)-1]
+
+    def agregarExpresionFunciones(self, texto):
+        self.expresionFunciones+=texto+"\n"
+    
+    def getTextoFunciones(self):
+        return self.expresionFunciones
 
     def agregarLibreria(self,nombre):
         self.librerias[nombre] = nombre
         
+    def getArrayHeap(self):
+        return "heap"
+
     def getArreglo(self):
         return self.arreglo
 
@@ -21,6 +41,10 @@ class C3DAux(object):
             return "hp"
         else:
             return "sp"
+
+    def getPointerHeap(self):
+        return "hp"
+        
     
     def changeArreglo(self):
         if self.arreglo == "heap":
@@ -125,22 +149,22 @@ class C3DAux(object):
                     etIni2 = self.getLabel()
                     etFin1 = self.getLabel()
                     etFin2 = self.getLabel()
-                    padre.expresion += str(tamC1)+ " = " + self.getArreglo() + "[int(" + str(nodo1.referencia) +  ")];\n"
-                    padre.expresion += str(tamC2)+ " = " + self.getArreglo() + "[int(" + str(nodo2.referencia) +  ")];\n"
+                    padre.expresion += str(tamC1)+ " = " + self.getArrayHeap() + "[int(" + str(nodo1.referencia) +  ")];\n"
+                    padre.expresion += str(tamC2)+ " = " + self.getArrayHeap() + "[int(" + str(nodo2.referencia) +  ")];\n"
                     
-                    padre.expresion += str(padre.referencia) + " = "+ self.getPointer() +";\n"
+                    padre.expresion += str(padre.referencia) + " = "+ self.getPointerHeap() +";\n"
                     padre.expresion += str(cont) + " = " + str(tamC1)+ " + " + str(tamC2) + ";\n"
-                    padre.expresion += self.getArreglo() +  "[int("+str(padre.referencia) + ")] = " + str(cont) + ";\n"
+                    padre.expresion += self.getArrayHeap() +  "[int("+str(padre.referencia) + ")] = " + str(cont) + ";\n"
                     padre.expresion += str(cont) + " = 1;\n"
-                    padre.expresion += self.getPointer() + " = " + self.getPointer() + " + 1;\n"
+                    padre.expresion += self.getPointerHeap() + " = " + self.getPointerHeap() + " + 1;\n"
 
                     padre.expresion += str(etIni) +  ":\n"
                     padre.expresion += "if ("+str(tamC1)+" < " + str(cont) + ") {goto "+str(etFin1)+"}\n"
                     # Se hace el procedimiento con cadenas
                     padre.expresion += str(poaschar) + " = " + str(cont) + " + " + str(nodo1.referencia)+";\n"
-                    padre.expresion += str(chr1) + " = " + self.getArreglo() + "[int(" +str(poaschar) + ")];\n" #Se obtiene el caracter n
-                    padre.expresion += self.getArreglo() + "[int(" + self.getPointer()+")] = " + str(chr1) + ";\n"
-                    padre.expresion += self.getPointer()+ " = " + self.getPointer() + " + 1;\n"
+                    padre.expresion += str(chr1) + " = " + self.getArrayHeap() + "[int(" +str(poaschar) + ")];\n" #Se obtiene el caracter n
+                    padre.expresion += self.getArrayHeap() + "[int(" + self.getPointerHeap()+")] = " + str(chr1) + ";\n"
+                    padre.expresion += self.getPointerHeap()+ " = " + self.getPointerHeap() + " + 1;\n"
                     padre.expresion += str(cont) + " = "+str(cont)+" + 1;\n"
                     padre.expresion += "goto "+str(etIni) + "\n"
                     padre.expresion += str(etFin1) + ":\n"
@@ -151,15 +175,15 @@ class C3DAux(object):
                     padre.expresion += "if ("+str(tamC2)+" < " + str(cont) + ") {goto "+str(etFin2)+"}\n"
                     # Se hace el procedimiento con cadenas
                     padre.expresion += str(poaschar) + " = " + str(cont) + " + " + str(nodo2.referencia)+";\n"
-                    padre.expresion += str(chr1) + " = " + self.getArreglo() + "[int(" +str(poaschar) + ")];\n" #Se obtiene el caracter n
-                    padre.expresion += self.getArreglo() + "[int(" + self.getPointer()+")] = " + str(chr1) + ";\n"
-                    padre.expresion += self.getPointer() + " = " + self.getPointer() + " + 1;\n"
+                    padre.expresion += str(chr1) + " = " + self.getArrayHeap() + "[int(" +str(poaschar) + ")];\n" #Se obtiene el caracter n
+                    padre.expresion += self.getArrayHeap() + "[int(" + self.getPointerHeap()+")] = " + str(chr1) + ";\n"
+                    padre.expresion += self.getPointerHeap() + " = " + self.getPointerHeap() + " + 1;\n"
                     padre.expresion += str(cont) + " = "+str(cont)+" + 1;\n"
                     padre.expresion += "goto "+str(etIni2) + "\n"
                     padre.expresion += str(etFin2) + ":\n"
-                    padre.expresion += self.getPointer()+" = "+self.getPointer()+" + "+str(tamC1)+";\n"
-                    padre.expresion += self.getPointer()+" = "+self.getPointer()+" + "+str(tamC2)+";\n"
-                    padre.expresion += self.getPointer()+" = "+self.getPointer()+" + 1;\n"
+                    padre.expresion += self.getPointerHeap()+" = "+self.getPointerHeap()+" + "+str(tamC1)+";\n"
+                    padre.expresion += self.getPointerHeap()+" = "+self.getPointerHeap()+" + "+str(tamC2)+";\n"
+                    padre.expresion += self.getPointerHeap()+" = "+self.getPointerHeap()+" + 1;\n"
                     #tablaSimbolos.setNextPosHeap(posHeap+padre.size+1)
                 elif(operacion == "^"):
                     print("Ref: ",nodo2.referencia, padre.size)
@@ -167,15 +191,15 @@ class C3DAux(object):
                     padre.expresion += nodo2.expresion
                     padre.referencia = self.getTemp()
                     padre.expresion += "\n//Inicia Aumento\n\n"
-                    padre.expresion += str(padre.referencia) + " = " + self.getPointer() + ";\n"
+                    padre.expresion += str(padre.referencia) + " = " + self.getPointerHeap() + ";\n"
                     
                     # Calculo del tamaño de la cadena
                     tamCad = self.getTemp() # Temporal donde se almacenará el tamaño de la cadena
                     tmpCad = self.getTemp()
-                    padre.expresion += str(tmpCad) + " = " +self.getArreglo()+"[int("+ str(nodo1.referencia)+")];\n"
+                    padre.expresion += str(tmpCad) + " = " +self.getArrayHeap()+"[int("+ str(nodo1.referencia)+")];\n"
                     padre.expresion += str(tamCad) + " = " + str(tmpCad) + " * " + str(nodo2.referencia)+";\n"
-                    padre.expresion += self.getArreglo()+"[int("+str(padre.referencia)+")] = "+ str(tamCad) + ";\n"
-                    padre.expresion += self.getPointer() + " = " + self.getPointer() + " + 1;\n"
+                    padre.expresion += self.getArrayHeap()+"[int("+str(padre.referencia)+")] = "+ str(tamCad) + ";\n"
+                    padre.expresion += self.getPointerHeap() + " = " + self.getPointerHeap() + " + 1;\n"
 
                     tmpContador = self.getTemp()
                     etqSalida = self.getLabel()
@@ -193,21 +217,21 @@ class C3DAux(object):
                     padre.expresion += str(tmpCont2) + " = "+str(tmpCont2) +" + 1;\n"
 
                     padre.expresion += str(tmpPosChar) + " = " + str(tmpCont2) + " + "+ str(nodo1.referencia)+";\n"
-                    padre.expresion += str(tmpCharAc) + " = " + self.getArreglo() + "[int("+str(tmpPosChar)+")];\n"
+                    padre.expresion += str(tmpCharAc) + " = " + self.getArrayHeap() + "[int("+str(tmpPosChar)+")];\n"
 
-                    padre.expresion += self.getArreglo()+"[int("+self.getPointer()+")] = "+str(tmpCharAc)+";\n"
+                    padre.expresion += self.getArrayHeap()+"[int("+self.getPointerHeap()+")] = "+str(tmpCharAc)+";\n"
 
                     #padre.expresion += "fmt.Println(hp, "+str(tmpCharAc)+");\n"
 
                     padre.expresion += "if("+str(tmpCont2)+"<"+str(tmpCad)+"){goto "+str(etqTemp)+"}\n"
                     padre.expresion += str(tmpCont2) + " = 0;\n"
                     padre.expresion += str(etqTemp)+":\n"
-                    padre.expresion += self.getPointer() + " = " + self.getPointer() + " +1;\n"
+                    padre.expresion += self.getPointerHeap() + " = " + self.getPointerHeap() + " +1;\n"
                     padre.expresion += "goto "+ str(etqCiclo)+"\n"
                     padre.expresion += str(etqSalida)+":\n"
 
 
-                    #padre.expresion += "fmt.Println("+self.getArreglo()+"[int("+str(padre.referencia)+")]);\n"
+                    #padre.expresion += "fmt.Println("+self.getArrayHeap()+"[int("+str(padre.referencia)+")]);\n"
 
                     padre.expresion += "\n//Finaliza Aumento\n\n"
 
@@ -233,7 +257,6 @@ class C3DAux(object):
         if padre.tipo != DataType.error:
             padre.tipo = DataType.bool
             if nodo1.tipo != DataType.string and nodo2.tipo != DataType.string:
-                print(nodo1.tipo, nodo2.tipo)
                 if nodo1.tipo == DataType.bool:
                     self.convertirBooleano(nodo1)
                 if nodo2.tipo == DataType.bool:
@@ -287,8 +310,8 @@ class C3DAux(object):
                 # Se obtiene la referencia de las dos cadenas
                 tam1 = self.getTemp()
                 tam2 = self.getTemp()
-                padre.expresion += str(tam1) + " = " + self.getArreglo() + "[int("+nodo1.referencia+")];\n"
-                padre.expresion += str(tam2) + " = " + self.getArreglo() + "[int("+nodo2.referencia+")];\n"
+                padre.expresion += str(tam1) + " = " + self.getArrayHeap() + "[int("+nodo1.referencia+")];\n"
+                padre.expresion += str(tam2) + " = " + self.getArrayHeap() + "[int("+nodo2.referencia+")];\n"
                 cnt1 = self.getTemp()
                 cnt2 = self.getTemp()
                 padre.expresion += str(cnt1) + " = 1;\n"
@@ -308,8 +331,8 @@ class C3DAux(object):
                 posArray2 = self.getTemp()
                 padre.expresion += str(posArray1) + " = " + str(cnt1) + " + " + str(nodo1.referencia) + ";\n"
                 padre.expresion += str(posArray2) + " = " + str(cnt2) + " + " + str(nodo2.referencia) + ";\n"
-                padre.expresion += str(tmpChr1)+ " = " + self.getArreglo() + "[int("+str(posArray1)+")];\n"
-                padre.expresion += str(tmpChr2)+ " = " + self.getArreglo() + "[int("+str(posArray2)+")];\n"
+                padre.expresion += str(tmpChr1)+ " = " + self.getArrayHeap() + "[int("+str(posArray1)+")];\n"
+                padre.expresion += str(tmpChr2)+ " = " + self.getArrayHeap() + "[int("+str(posArray2)+")];\n"
                 padre.expresion += "if ("+str(tmpChr1) +" "+ operacion + " " +str(tmpChr2)+"){goto }"
     
     
@@ -399,6 +422,8 @@ class C3DAux(object):
                             padre.expresion +='''fmt.Printf(\"%g\",'''+str(nodoExp.referencia)+''');\n'''
                         elif (nodoExp.tipo == DataType.bool):
                             padre.expresion +='''fmt.Printf(\"%g\",'''+str(nodoExp.referencia)+''');\n'''
+                        elif (nodoExp.tipo == DataType.generic):
+                            padre.expresion +='''fmt.Printf(\"%g\",'''+str(nodoExp.referencia)+''');\n'''
                         
                     else:
                         tmpRef1 = self.getTemp()
@@ -408,13 +433,13 @@ class C3DAux(object):
                         tmpChr = self.getTemp()
                         # nodoExpresion.referencia es la posición del HEAP de la cadena.
 
-                        padre.expresion += str(tmpRef1) + " = "+ self.getArreglo() + "[int("+str(nodoExp.referencia)+")];\n" # Se obtiene el tamaño de la cadena 
+                        padre.expresion += str(tmpRef1) + " = "+ self.getArrayHeap() + "[int("+str(nodoExp.referencia)+")];\n" # Se obtiene el tamaño de la cadena 
                         padre.expresion += str(tmpCont) + " = 1;\n"
                         padre.expresion += str(tmpEtqS) + ":\n"
                         padre.expresion += "if("+str(tmpCont)+">"+str(tmpRef1)+") {goto "+str(tmpEtq)+"}\n"
                         padre.expresion += str(tmpCont) +" = " + str(tmpCont)+" + 1;\n"
                         padre.expresion += str(nodoExp.referencia) +" = " + str(nodoExp.referencia) +" + 1;\n"
-                        padre.expresion += str(tmpChr) + " = " + self.getArreglo() + "[int("+str(nodoExp.referencia)+")];\n"
+                        padre.expresion += str(tmpChr) + " = " + self.getArrayHeap() + "[int("+str(nodoExp.referencia)+")];\n"
                         padre.expresion += "fmt.Printf(\"%c\",int("+str(tmpChr)+"));\n"
                         padre.expresion += "goto "+str(tmpEtqS)+"\n"
                         padre.expresion += str(tmpEtq)+ ":\n"
@@ -428,15 +453,15 @@ class C3DAux(object):
         # La cadena SIEMPRE se almacenará en el heap, tenga o no tenga que ocupar espacios de memoria.
         # Acá siempre llegan cadenas y se obtiene una referencia.
         tam = len(padre.valor)
-        pos = symbolTable.getNextPosHeap()
-        padre.expresion += self.getArreglo()+"[int("+self.getPointer()+")] = "+str(tam)+";\n"
+        pos = symbolTable.getNextPosArray()
+        padre.expresion += self.getArrayHeap()+"[int("+self.getPointerHeap()+")] = "+str(tam)+";\n"
         padre.referencia = self.getTemp()
-        padre.expresion += str(padre.referencia)+" = "+self.getPointer()+";\n"
-        padre.expresion += self.getPointer() + " = "+self.getPointer()+" + 1;\n"
+        padre.expresion += str(padre.referencia)+" = "+self.getPointerHeap()+";\n"
+        padre.expresion += self.getPointerHeap() + " = "+self.getPointerHeap()+" + 1;\n"
         for x in padre.valor:
             # Se recorre la cadena elemento por elemento y se ingresa al heap.
-            padre.expresion += self.getArreglo()+"[int("+self.getPointer()+")] = " + str(ord(x)) + ";\n"
-            padre.expresion += self.getPointer() + " = "+self.getPointer()+" + 1;\n"
+            padre.expresion += self.getArrayHeap()+"[int("+self.getPointerHeap()+")] = " + str(ord(x)) + ";\n"
+            padre.expresion += self.getPointerHeap() + " = "+self.getPointerHeap()+" + 1;\n"
     #endregion
 
     #region Upper
@@ -450,24 +475,24 @@ class C3DAux(object):
             etqCiclo = self.getLabel()
             tmpPosLectura = self.getTemp()
             tmpCharLectura = self.getTemp()
-            padre.expresion += str(tamCad) +" = " + self.getArreglo()+"[int("+str(hijo.referencia)+")];\n"
+            padre.expresion += str(tamCad) +" = " + self.getArrayHeap()+"[int("+str(hijo.referencia)+")];\n"
 
 
             padre.referencia = self.getTemp()
-            padre.expresion += str(padre.referencia) + " = "+ self.getPointer()+";\n"
-            padre.expresion += self.getArreglo() + "[int("+self.getPointer()+")] = " + str(tamCad) + ";\n"
+            padre.expresion += str(padre.referencia) + " = "+ self.getPointerHeap()+";\n"
+            padre.expresion += self.getArrayHeap() + "[int("+self.getPointerHeap()+")] = " + str(tamCad) + ";\n"
             
 
             padre.expresion += str(cont) +" = 0;\n"
             padre.expresion += str(etqCiclo)+":\n"
-            padre.expresion += self.getPointer() + " = " + self.getPointer()+" + 1;\n" 
+            padre.expresion += self.getPointerHeap() + " = " + self.getPointerHeap()+" + 1;\n" 
             padre.expresion += "if(" + str(tamCad) + "<" + str(cont) + "){ goto "+etqSalida+"}\n"
 
 
             etqSalto = self.getLabel()
             padre.expresion += str(cont) +" = "+str(cont) +" + 1;\n"
             padre.expresion += str(tmpPosLectura) + " = " +str(hijo.referencia) + " + " + str(cont)+";\n"
-            padre.expresion += str(tmpCharLectura) + " = " + self.getArreglo() + "[int("+str(tmpPosLectura)+")];\n"
+            padre.expresion += str(tmpCharLectura) + " = " + self.getArrayHeap() + "[int("+str(tmpPosLectura)+")];\n"
             if (isUpper):
                 padre.expresion += "if(" + str(tmpCharLectura) + "< 97 ){ goto "+str(etqSalto)+" }\n" #Agregar etiqueta
                 padre.expresion += "if(" + str(tmpCharLectura) + "> 122 ){ goto "+str(etqSalto)+" }\n" #Agregar etiqueta
@@ -478,8 +503,8 @@ class C3DAux(object):
                 padre.expresion += str(tmpCharLectura) + " = " +  str(tmpCharLectura) + " + 32;\n"
             
             padre.expresion += str(etqSalto) + ":\n"
-            #padre.expresion += "fmt.Println("+str(tmpCharLectura)+","+self.getPointer()+");\n"
-            padre.expresion += self.getArreglo()+"[int("+self.getPointer()+")] = " + str(tmpCharLectura) + ";\n"
+            #padre.expresion += "fmt.Println("+str(tmpCharLectura)+","+self.getPointerHeap()+");\n"
+            padre.expresion += self.getArrayHeap()+"[int("+self.getPointerHeap()+")] = " + str(tmpCharLectura) + ";\n"
             padre.expresion += "//Finaliza upper\n"
             
             

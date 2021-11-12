@@ -29,16 +29,24 @@ class InstruccionAsignacion(Nodo):
 
     def getC3D(self,symbolTable):
         self.hijos[2].getC3D(symbolTable)
+        #print(self.hijos[2].referencia)
         # La tiene que encontrar, ya que inicialmente se realizó una búsqueda de variables
         nuevaVar = symbolTable.findSymbol(self.hijos[0].texto)
+        #print("iNICIA IMPRESION ---------------------------------------------------------")
+        #print(self.hijos[0].texto)
+        #print("FINALIZA IMPRESION ---------------------------------------------------------")
         if nuevaVar!= None:
-            tempEtqV = C3DAux().getLabel()
             C3DAux().convertirEtiquetas(self.hijos[2])
             self.expresion += self.hijos[2].expresion
-            self.referencia = C3DAux().getTemp()
             
-            self.expresion += str(self.referencia) + " = " + str(nuevaVar.posicion) + ";\n"
-            self.expresion += str(C3DAux().getArreglo())+"[int(" + str(self.referencia)+")] = " + str(self.hijos[2].referencia) + ";\n"
+            if C3DAux().getPointer() == "sp":
+                self.referencia = "t1"
+                self.expresion += "t1 = sp + " + str(nuevaVar.posicion) + ";\n"
+                self.expresion += str(C3DAux().getArreglo())+"[int(" + str(self.referencia)+")] = " + str(self.hijos[2].referencia) + ";\n"
+            else:
+                self.referencia = C3DAux().getTemp()
+                self.expresion += str(self.referencia) + " = " + str(nuevaVar.posicion) + ";\n"
+                self.expresion += "heap[int(" + str(self.referencia)+")] = " + str(self.hijos[2].referencia) + ";\n"
         else:
             print("Existe un error de implementación")
         

@@ -28,14 +28,14 @@ import ( '''
     for x in C3DAux().librerias:
         textoRetorno+="\"" + str(x) + "\"\n"
     textoRetorno +=''' )
-var stack [1000]float64
-var heap [1000]float64
+var stack [10000000]float64
+var heap [10000000]float64
 var hp, sp float64
 var '''
     for i in range(0,C3DAux().temp):
         textoRetorno += "t" + str(i)+ ", "
     textoRetorno += "t" + str(C3DAux().temp) + " float64;\n"
-    return textoRetorno + entrada
+    return textoRetorno +"\n"+C3DAux().getTextoFunciones()+"\n" +entrada
 
 
 @app.route('/')
@@ -88,6 +88,7 @@ def translate():
     global tabla_simbolos
     global tabla_errores
     C3DAux().librerias = {}
+    C3DAux().listaTamEntornos = []
     entrada = request.json['entrada']
     resultado = run_method(entrada)
     # { raiz, errores }
@@ -97,9 +98,15 @@ def translate():
         analizo = True
         tablaSimbolos = SymbolTable({"nombre": "Global", "numero" : 0})
         resultado['raiz'].createTable(tablaSimbolos)
-        tablaSimbolos.imprimir()
+        #tablaSimbolos.imprimir()
+        #tablaSimbolos.setNextPosArray
+        C3DAux().agregarATam(0)
         resultado['raiz'].expresion = "func main(){\n"
+        resultado['raiz'].expresion += "sp = 0;\n"
         resultado['raiz'].expresion += "hp = "+str(tablaSimbolos.posicion)+";\n"
+        C3DAux().expresionFunciones = ""
+        C3DAux().getTemp() # T0 para los return
+        C3DAux().getTemp() # T1 para los sp
         resultado['raiz'].getC3D(tablaSimbolos)
         resultado['raiz'].expresion += "}\n"
         consolaSalida = crearC3D(resultado['raiz'].expresion,tablaSimbolos)

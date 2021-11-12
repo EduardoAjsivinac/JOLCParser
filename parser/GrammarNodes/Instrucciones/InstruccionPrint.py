@@ -1,5 +1,6 @@
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
+from ..C3D import C3DAux
 
 class InstruccionPrint(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna = -1):
@@ -40,4 +41,5 @@ class InstruccionPrint(Nodo):
 
 
     def getC3D(self,symbolTable):
-        pass
+        self.hijos[2].getC3D(symbolTable)
+        C3DAux().traducirPrint(self.hijos[2],self, False)

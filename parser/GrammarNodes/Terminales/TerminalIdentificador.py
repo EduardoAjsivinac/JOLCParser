@@ -31,14 +31,22 @@ class TerminalIdentificador(Nodo):
             #if atributo.tipo != DataType.string:
             tmp = C3DAux().getTemp()
             self.referencia = C3DAux().getTemp()
-            self.expresion += str(tmp) + " = " + str(atributo.posicion) + ";\n"
-            self.expresion += str(self.referencia) + " = heap[int(" + str(tmp) + ")];\n"
+            if C3DAux().getArreglo()=="stack":
+                self.expresion += str(tmp) + " = sp + " + str(atributo.posicion) + ";\n"
+            else:
+                self.expresion += str(tmp) + " = " + str(atributo.posicion) + ";\n"
+            #if atributo.tipo != DataType.string:
+            self.expresion += str(self.referencia) + " = "+str(C3DAux().getArreglo())+"[int(" + str(tmp) + ")];\n"
+            #else:
+            #    self.expresion += str(self.referencia) + " = heap[int(" + str(tmp) + ")];\n"
             self.tipo = atributo.tipo
             #else:
             #    symbolTable.imprimir()
             #    print("Cadena")
+            self.size = atributo.posicion
                 
         else:
             descrpicion = "No existe la variable <b>"+self.texto+"</b>"
             self.tipo = DataType.error
             symbolTable.agregarError(descrpicion, self.fila, self.columna, "simbolo")
+            self.size = -1

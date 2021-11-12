@@ -2,6 +2,7 @@ from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
 from parser.Entorno.Entorno import Entorno, TipoEntorno
 from copy import deepcopy
+from ..C3D import C3DAux
 
 class InstruccionLlamadaFuncion(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo= None):
@@ -39,4 +40,13 @@ class InstruccionLlamadaFuncion(Nodo):
         pass
     
     def getC3D(self,symbolTable):
-        pass
+        self.hijos[0].getC3D(symbolTable)
+        if (self.hijos[0].size == 1):
+            # self.expresion+="sp=sp+0;\n" #Descomentar cuando vengan parametros
+            atr = symbolTable.findSymbol(self.hijos[0].texto)
+            print(atr.tam)
+            self.referencia = C3DAux().getTemp()
+            self.expresion += str(self.referencia) + " = stack[int(sp)];\n"
+            self.expresion+=self.hijos[0].texto+"();\n"
+        else:
+            print(self.hijos[0].size)

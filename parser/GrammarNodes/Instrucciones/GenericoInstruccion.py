@@ -44,13 +44,13 @@ class GenericoInstruccion(Nodo):
     def getC3D(self,symbolTable):
         for x in self.hijos:
             x.getC3D(symbolTable)
-            if x.texto == "Instruccion":
-                if x.texto == "Function":
-                    self.expresion = x.expresion + self.expresion
-                else: 
-                    self.expresion += x.expresion
-            else:
-                self.expresion += x.expresion 
+            #if x.texto == "Instruccion":
+            #    if x.texto == "Function":
+            #        self.expresion = x.expresion + self.expresion
+            #    else: 
+            #        self.expresion += x.expresion
+            #else:
+            self.expresion += x.expresion 
             if(x.isReturn):
                 if (symbolTable.getTipoEntorno() == "global"): # No está en el entorno global
                     descripcion = "La instruccion retorno se debe definir dentro de una funcion"
@@ -60,7 +60,7 @@ class GenericoInstruccion(Nodo):
                     self.tipo = x.tipo
                     self.valor = x.valor
                     self.etReturn = x.etReturn
-                    break
+                    
                     
             if(x.isBreak):
                 if (symbolTable.getTipoEntorno() != "global"):

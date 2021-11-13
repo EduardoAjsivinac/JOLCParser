@@ -35,8 +35,8 @@ class FuncionPush(Nodo):
                     temp.valor.append(self.hijos[5])
                     enviroment.updateSymbol(self.hijos[2].texto, self.hijos[2].fila, self.hijos[2].columna, self.hijos[2].valor, self.hijos[2].tipo)
 
-                
+    def createTable(self, simbolTable):
+        pass
         
-        
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

@@ -1,20 +1,17 @@
 println("=======================================================================");
 println("==========================FUNCIONES Y RETURN===========================");
 println("=======================================================================");
-function potenciaNativa(base, exponente)
+function potenciaNativa(base::Int64, exponente::Int64)
     resultado = base;
     while exponente > 1
         resultado = resultado * base;
         exponente = exponente - 1;
     end;
+    println(sumarTodo(base,exponente))
     return resultado;
 end;
 
-println(potenciaNativa(5, 7));
-println(potenciaNativa(2, 2));
-println(potenciaNativa(4, 2));
-
-function sumarTodo(num1, num2)
+function sumarTodo(num1::Int64, num2::Int64)
     result = 0;
     if num1 < 0 || num2 < 0
         return -1;
@@ -28,6 +25,6 @@ function sumarTodo(num1, num2)
     return result;
 end;
 
-println(sumarTodo(5, 4));
-println(sumarTodo(-1, -5));
-println(sumarTodo(7, 7));
+println(potenciaNativa(5, 7));
+println(potenciaNativa(2, 2));
+println(potenciaNativa(4, 2));

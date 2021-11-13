@@ -14,6 +14,9 @@ class NodeTipo(Nodo):
             else:
                 self.tipo = DataType.error
                 self.valor = None
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

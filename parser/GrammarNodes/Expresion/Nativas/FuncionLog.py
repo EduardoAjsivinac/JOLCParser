@@ -17,6 +17,9 @@ class FuncionLog(Nodo):
         else:
             descripcion = "La función <b>log</b> requiere una numeros como parametros"
             enviroment.addError(descripcion, self.hijos[0].fila, self.hijos[0].columna)
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

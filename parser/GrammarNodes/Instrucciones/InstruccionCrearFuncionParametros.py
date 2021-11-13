@@ -1,6 +1,8 @@
 from parser.Entorno.Entorno import Entorno, TipoEntorno
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
+from ..C3D import C3DAux
+from copy import deepcopy
 
 class InstruccionCrearFuncionParametros(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna=-1, tipo= None):
@@ -40,7 +42,36 @@ class InstruccionCrearFuncionParametros(Nodo):
                 enviroment.addError(descripcion, self.fila, self.columna)
         if(not hayError):
             enviroment.addFunction(idFuncion, nodoCuerpo, self.fila, self.columna, dictParam, arrParam)
+    
+    def createTable(self, simbolTable):
+        nuevaTabla = deepcopy(simbolTable)
+        nuevaTabla.agregarEntorno("funcion")
+        nuevaTabla.setNextPosArray(0)
+        params = nuevaTabla.getNoVar()
+        
+        self.hijos[3].createTable(nuevaTabla)
+        #nuevaTabla.imprimir()
+        params = nuevaTabla.getNoVar()-params
+        self.hijos[5].createTable(nuevaTabla)
+        simbolTable.insertFunctionEntity(self.hijos[1].texto, nuevaTabla.getNoVar() - simbolTable.getNoVar(), params + 1, nuevaTabla.listaSimbolos)
 
-
-    def getC3D(self):
-        pass
+    def getC3D(self,symbolTable):
+        C3DAux().changeArreglo()
+        atr = symbolTable.findSymbol(self.hijos[1].texto)
+        if atr != None:
+            C3DAux().agregarATam(atr.tam+1)
+        symbolTable.agregarEntorno("funcion")
+        self.hijos[5].getC3D(symbolTable)
+        symbolTable.eliminarEntorno()
+        C3DAux().changeArreglo()
+        txt = "func "+self.hijos[1].texto+"(){\n"
+        txt += "t0 = sp;\n"
+        txt += "t1 = sp;\n"
+        txt += self.hijos[5].expresion
+        for x in C3DAux().listaReturns:
+            txt+=str(x)+":\n"
+        txt += "}\n"
+        C3DAux().listaReturns = []
+        C3DAux().agregarExpresionFunciones(txt)
+        if atr != None:
+            C3DAux().eliminarTam()

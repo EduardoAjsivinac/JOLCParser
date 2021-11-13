@@ -1,3 +1,4 @@
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
 
@@ -36,9 +37,13 @@ class InstruccionPrintln(Nodo):
                 listaMatriz.append(x.valor)
         return listaMatriz
 
-    
-
-
-
-    def getC3D(self):
+    def createTable(self, simbolTable):
         pass
+
+    def getC3D(self,symbolTable):
+        #println ( listaexp )
+        self.hijos[2].getC3D(symbolTable)
+        C3DAux().traducirPrint(self.hijos[2],self, True)
+        #self.expresion += self.hijos[2].hijos[0].expresion
+        #self.expresion += "fmt.Println("+str(self.hijos[2].hijos[0].referencia)+");\n"
+        

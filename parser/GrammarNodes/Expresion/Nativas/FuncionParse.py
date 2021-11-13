@@ -33,8 +33,8 @@ class FuncionParse(Nodo):
                 descripcion = "El valor <b>"+self.hijos[4].valor+"</b> no se puede convertir a flotante"
                 enviroment.addError(descripcion, self.hijos[0].fila, self.hijos[0].columna)
 
-        
-    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

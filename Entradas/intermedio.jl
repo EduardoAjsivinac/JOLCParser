@@ -1,17 +1,3 @@
-array = [32, 21, 7, 89, 56, 909, 109, 2];
-
-println("=======================================================================");
-println("==================================IF===================================");
-println("=======================================================================");
-
-if (array[4] > 50) 
-    println("IF CORRECTO");
-elseif (array[4] == 56) 
-    println("IF INCORRECTO");
-else
-    println("IF INCORRECTO");
-end;
-
 println("");
 println("=======================================================================");
 println("=============================IFs ANIDADOS==============================");
@@ -27,15 +13,6 @@ if aux > 0
         println("SEGUNDO IF CORRECTO");
     end;
 elseif aux <= 3
-    println("PRIMER IF INCORRECTO");
-    if true && (aux == 1)
-        println("SEGUNDO IF INCORRECTO");
-    elseif aux > 10
-        println("SEGUNDO IF INCORRECTO");
-    else
-        println("SEGUNDO IF CORRECTO");
-    end;
-elseif aux == array[4]
     println("PRIMER IF INCORRECTO");
     if true && (aux == 1)
         println("SEGUNDO IF INCORRECTO");

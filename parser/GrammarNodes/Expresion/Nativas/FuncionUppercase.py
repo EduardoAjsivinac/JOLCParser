@@ -1,3 +1,4 @@
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from ...Node import Nodo
 from ...Tipo import DataType
 from ...Tipo import TypeChecker
@@ -15,5 +16,10 @@ class FuncionUppercase(Nodo):
             descripcion = "La función <b>uppercase</b> requiere una cadena como parametro"
             enviroment.addError(descripcion, self.hijos[0].fila, self.hijos[0].columna)
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
         pass
+
+    def getC3D(self,symbolTable):
+        self.hijos[2].getC3D(symbolTable)
+        C3DAux().traducirCase(self,self.hijos[2],symbolTable, True)
+        

@@ -22,7 +22,22 @@ class NodeAgrupacion(Nodo):
         self.isBreak = self.hijos[1].isBreak
 
 
+    def createTable(self, simbolTable):
+        # ( EXPRESION )
+        self.hijos[1].createTable(simbolTable)
+        self.tipo = self.hijos[1].tipo
 
-
-    def getC3D(self):
-        pass
+    def getC3D(self,symbolTable):
+        self.hijos[1].getC3D(symbolTable)
+        self.expresion = self.hijos[1].expresion
+        self.referencia = self.hijos[1].referencia
+        self.tipo = self.hijos[1].tipo
+        self.ef = self.hijos[1].ef
+        self.ev = self.hijos[1].ev
+        self.isReturn = self.hijos[1].isReturn
+        self.isContinue = self.hijos[1].isContinue
+        self.isBreak = self.hijos[1].isBreak
+        self.etBreak = self.hijos[1].etBreak
+        self.etContinue = self.hijos[1].etContinue
+        self.etReturn = self.hijos[1].etReturn
+    

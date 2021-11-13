@@ -48,5 +48,8 @@ class AccesoAPosicion(Nodo):
             self.tipo = DataType.error
         return None
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+
+    def getC3D(self,symbolTable):
         pass

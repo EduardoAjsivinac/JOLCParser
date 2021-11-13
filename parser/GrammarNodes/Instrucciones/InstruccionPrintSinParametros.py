@@ -10,5 +10,8 @@ class InstruccionPrintSinParametros(Nodo):
         texto = "\n"
         enviroment.consolaSalida += texto
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+    
+    def getC3D(self,symbolTable):
         pass

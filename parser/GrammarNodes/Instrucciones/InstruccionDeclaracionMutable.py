@@ -25,6 +25,9 @@ class InstruccionDeclaracionMutable(Nodo):
         else:
             descripcion = "El struct " + self.hijos[2].texto +" ya está declarado."
             enviroment.addError(descripcion, self.hijos[2].fila, self.hijos[2].columna)
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

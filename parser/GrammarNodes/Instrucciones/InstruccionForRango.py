@@ -29,7 +29,8 @@ class InstruccionForRango(Nodo):
                     break
         enviroment.actualizarValoresEntorno(nuevoEntorno)
 
-        
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

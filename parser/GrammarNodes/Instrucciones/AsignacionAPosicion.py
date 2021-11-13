@@ -39,6 +39,9 @@ class AsignacionAPosicion(Nodo):
         else:
             descripcion = "El tipo de variable no es un arreglo o la variable no está definida"
             enviroment.addError(descripcion,self.hijos[0].fila, self.hijos[0].columna)
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

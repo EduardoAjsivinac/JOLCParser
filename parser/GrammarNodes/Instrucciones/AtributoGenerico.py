@@ -13,6 +13,9 @@ class AtributoGenerico(Nodo):
         else:
             descripcion = "El atributo ya está declarado en esta estructura " + self.hijos[0].texto
             enviroment.addError(descripcion, self.hijos[0].fila, self.hijos[0].columa)
+
+    def createTable(self, simbolTable):
+        pass
             
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

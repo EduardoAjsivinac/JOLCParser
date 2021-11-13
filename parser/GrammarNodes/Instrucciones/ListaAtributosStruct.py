@@ -10,5 +10,8 @@ class ListaAtributosStruct(Nodo):
         for x in self.hijos:
             x.execute(enviroment)
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+
+    def getC3D(self,symbolTable):
         pass

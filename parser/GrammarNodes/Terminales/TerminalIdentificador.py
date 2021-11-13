@@ -1,3 +1,4 @@
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from ..Node import Nodo
 from ..Tipo import DataType
 from ..Tipo import TypeChecker
@@ -19,5 +20,33 @@ class TerminalIdentificador(Nodo):
             self.valor = None
             self.tipo = DataType.nothing
 
-    def getC3D(self):
-        pass
+    def createTable(self, simbolTable):
+        nodo = simbolTable.findSymbol(self.texto)
+        if nodo != None:
+            self.tipo = nodo.tipo
+
+    def getC3D(self,symbolTable):
+        atributo = symbolTable.findSymbol(self.texto)
+        if atributo != None:
+            #if atributo.tipo != DataType.string:
+            tmp = C3DAux().getTemp()
+            self.referencia = C3DAux().getTemp()
+            if C3DAux().getArreglo()=="stack":
+                self.expresion += str(tmp) + " = sp + " + str(atributo.posicion) + ";\n"
+            else:
+                self.expresion += str(tmp) + " = " + str(atributo.posicion) + ";\n"
+            #if atributo.tipo != DataType.string:
+            self.expresion += str(self.referencia) + " = "+str(C3DAux().getArreglo())+"[int(" + str(tmp) + ")];\n"
+            #else:
+            #    self.expresion += str(self.referencia) + " = heap[int(" + str(tmp) + ")];\n"
+            self.tipo = atributo.tipo
+            #else:
+            #    symbolTable.imprimir()
+            #    print("Cadena")
+            self.size = atributo.posicion
+                
+        else:
+            descrpicion = "No existe la variable <b>"+self.texto+"</b>"
+            self.tipo = DataType.error
+            symbolTable.agregarError(descrpicion, self.fila, self.columna, "simbolo")
+            self.size = -1

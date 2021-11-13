@@ -14,5 +14,8 @@ class TerminalPosicionArray(Nodo):
         self.columna = self.hijos[1].columna
         self.tipo = self.hijos[1].tipo
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+
+    def getC3D(self,symbolTable):
         pass

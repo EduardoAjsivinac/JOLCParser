@@ -15,7 +15,9 @@ class ArregloAPosicion(Nodo):
                 self.valor.append(x.valor)
             else:
                 self.tipo = DataType.error
-        
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+
+    def getC3D(self,symbolTable):
         pass

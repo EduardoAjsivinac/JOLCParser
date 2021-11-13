@@ -18,7 +18,17 @@ class Parametro(Nodo):
             self.valor = self.hijos[0].texto
             self.fila = self.hijos[0].fila
             self.columna = self.hijos[0].columna
-        
 
-    def getC3D(self):
+    
+    def createTable(self, simbolTable):
+        atributo = simbolTable.findSymbol(self.hijos[0].texto)
+        if atributo == None:
+            if len(self.hijos) == 3:
+                self.hijos[2].createTable(simbolTable)
+                simbolTable.insertSymbolEntity(self.hijos[0].texto, self.hijos[2].tipo, 1, isGlobal = False)
+            else:
+                simbolTable.insertSymbolEntity(self.hijos[0].texto, DataType.generic, 1, isGlobal = False)
+        
+        
+    def getC3D(self,symbolTable):
         pass

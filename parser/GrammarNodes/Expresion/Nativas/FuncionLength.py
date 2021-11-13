@@ -23,5 +23,8 @@ class FuncionLength(Nodo):
             descripcion = "La funcion length se aplica unicamente a un arreglo"
             enviroment.addError(descripcion,self.fila,self.columna)
 
-    def getC3D(self):
+    def createTable(self, simbolTable):
+        pass
+    
+    def getC3D(self,symbolTable):
         pass

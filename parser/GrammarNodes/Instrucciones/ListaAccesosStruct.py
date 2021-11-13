@@ -45,8 +45,8 @@ class ListaAccesosStruct(Nodo):
                 dictBusqueda['valor'] = self.valor
                 dictBusqueda['tipo'] = self.tipo
 
+    def createTable(self, simbolTable):
+        pass
 
-
-
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

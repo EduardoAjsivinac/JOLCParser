@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% block content %}
-    <form action="/parse" method="POST">
+    <form action="/translate" method="POST">
     <div class="spaced">
         <div style="height: 75vh;" class="row">
             
@@ -26,7 +26,7 @@
         </div>
         <div class="spaced">
             <center>
-                <button type="button" class="btn btn-primary" id="Enviar" name="Enviar"/>Analizar</button>
+                <button type="button" class="btn btn-primary" id="Enviar" name="Enviar"/>Traducir</button>
             </center>
         </div>
     </div>
@@ -36,7 +36,7 @@
     e.preventDefault();
     var entrada = document.getElementById("inputtext").value;
     var settings = {
-        "url": "/parse",
+        "url": "/translate",
         "method": "POST",
         "timeout": 0,
         "headers": {

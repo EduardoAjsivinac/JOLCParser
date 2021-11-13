@@ -13,6 +13,9 @@ class FuncionTypeof(Nodo):
             self.hijos[2].tipo=DataType.nothing
         self.valor = self.hijos[2].tipo.name
         self.tipo = self.hijos[2].tipo
+    
+    def createTable(self, simbolTable):
+        pass
 
-    def getC3D(self):
+    def getC3D(self,symbolTable):
         pass

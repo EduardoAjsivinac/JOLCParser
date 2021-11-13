@@ -1,6 +1,8 @@
+from parser.GrammarNodes.C3D.Etiquetas import C3DAux
 from ...Node import Nodo
 from ...Tipo import DataType
 from ...Tipo import TypeChecker
+from ...Tipo import TypeCheckerC3DTable
 
 class NodeModulo(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna = -1):
@@ -15,5 +17,12 @@ class NodeModulo(Nodo):
             self.valor = self.hijos[0].valor % self.hijos[2].valor
         self.tipo = type
 
-    def getC3D(self):
-        pass
+    def createTable(self, simbolTable):
+        self.hijos[0].createTable(simbolTable)
+        self.hijos[2].createTable(simbolTable)
+        self.tipo = TypeCheckerC3DTable('%',simbolTable, self.hijos[0], self.hijos[2])
+
+    def getC3D(self,symbolTable):
+        self.hijos[0].getC3D(symbolTable)
+        self.hijos[2].getC3D(symbolTable)
+        C3DAux().traducirAritmetica("%",self.hijos[0],self.hijos[2], symbolTable,self)

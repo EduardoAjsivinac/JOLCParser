@@ -6,18 +6,22 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">Entorno</th>
                     <th scope="col">Simbolo</th>
                     <th scope="col">Tipo</th>
+                    <th scope="col">Tamaño</th>
+                    <th scope="col">Entorno</th>
+                    <th scope="col">Posicion</th>
                 </tr>
                 </thead>
                 <tbody>
                 {%for entorno in tabla_simbolos%}
-                  {%for simbolo in tabla_simbolos[entorno]%}
+                  {%for simbolo in tabla_simbolos%}
                   <tr>
-                      <td>{{entorno}}</td>
-                      <td>{{simbolo}}</td>
-                      <td>{{tabla_simbolos[entorno][simbolo]['clase']}}</td>
+                      <td>{{simbolo[0]}}</td>
+                      <td>{{simbolo[1]}}</td>
+                      <td>{{simbolo[2]}}</td>
+                      <td>{{simbolo[3]}}</td>
+                      <td>{{simbolo[4]}}</td>
                   </tr>  
                   {%endfor%}
                 {%endfor%}

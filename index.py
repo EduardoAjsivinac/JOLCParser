@@ -114,12 +114,23 @@ def translate():
         file = open("./Entradas/Salida.go", "w")
         file.write(consolaSalida)
         file.close()
-        dotresult = "digraph G {" + resultado['raiz'].getdot()+ "}"
-        dataresult={
-            "errores": tablaSimbolos.erroresSalida,
-            "data": consolaSalida
-        }
-        return dataresult
+        if(len(tablaSimbolos.erroresSalida) ==0):
+            tabla_simbolos = tablaSimbolos.toArraySymbol()
+            print(tabla_simbolos)
+            dotresult = "digraph G {" + resultado['raiz'].getdot()+ "}"
+            dataresult={
+                "errores": tablaSimbolos.erroresSalida,
+                "data": consolaSalida
+            }
+            return dataresult
+        else:
+            dotresult = "digraph G {" + resultado['raiz'].getdot()+ "}"
+            dataresult={
+                "errores": tablaSimbolos.erroresSalida,
+                "data": ""
+            }
+            return dataresult
+        
     dataresult={
         "errores": resultado['errores'],
         "data": ""
@@ -149,7 +160,7 @@ def reports():
         f.write(data.decode("utf-8"))
         f.close()
         # return render_template('html/reports.html', project_name = "JOLC Parser", tabla_simbolos = tabla_simbolos, tabla_errores = tabla_errores)
-        return render_template('html/reports.html', project_name = "JOLC Parser")
+        return render_template('html/reports.html', project_name = "JOLC Parser",tabla_simbolos = tabla_simbolos)
     return redirect(url_for('workarea'))
 
 @app.route("/getSVGImage")

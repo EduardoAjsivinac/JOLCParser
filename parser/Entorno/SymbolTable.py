@@ -11,6 +11,25 @@ class SymbolTable():
         self.posicion = 0
         self.noEntorno = 1 # El 0 es el global
         self.erroresSalida = []
+
+    def toArraySymbol(self):
+        nuevaLista = []
+        
+        for x in self.listaSimbolos:
+            entorno = []
+            for ent in x.entorno:
+                entorno.append(ent['nombre'])
+            tipo = x.tipo
+            if (x.tipo ==None):
+                tipo = "Generico"
+            elif x.tipo == DataType.nothing:
+                tipo = "Funcion"
+            else:
+                tipo = x.tipo.name
+
+            nuevaLista.append([x.nombre, tipo, x.tam, entorno, x.posicion])
+        return nuevaLista
+    
     def agregarExpresionFunciones(self, texto):
         self.expresionFunciones+=texto+"\n"
     

@@ -433,6 +433,8 @@ class C3DAux(object):
                             padre.expresion +='''fmt.Printf(\"%g\",'''+str(nodoExp.referencia)+''');\n'''
                         elif (nodoExp.tipo == DataType.generic):
                             padre.expresion +='''fmt.Printf(\"%g\",'''+str(nodoExp.referencia)+''');\n'''
+                        elif (nodoExp.tipo == DataType.char):
+                            padre.expresion +='''fmt.Printf(\"%c\",int('''+str(nodoExp.referencia)+'''));\n'''
                         else:
                             isPrintln = False
                         
@@ -528,6 +530,69 @@ class C3DAux(object):
 
         else:
             print("Error")
+    #endregion
+
+
+    #region For
+    def traducirFor(self, iterador, nodoExpresion, nodoInstruccion,tablaSimbolos, padre, nodoExpresion2 =  None):
+        if nodoExpresion.tipo ==DataType.string:
+            
+            atr = tablaSimbolos.findSymbol(iterador.texto)
+            if atr!= None:
+                pos = atr.posicion
+                padre.expresion += iterador.expresion
+                etqTmp = self.getTemp()
+                saltoFor = self.getLabel()
+                saltoFinFor = self.getLabel()
+                tamCad = self.getTemp()
+                tmpChar  = self.getTemp()
+                tmpPosChar = self.getTemp()
+                padre.expresion += nodoExpresion.expresion
+                padre.expresion += str(tamCad) + " = " + str(self.getArreglo()) + "[int("+str(nodoExpresion.referencia)+")];\n"
+                padre.expresion += str(iterador.referencia) + " = " + str(iterador.referencia)+" + 1;\n"
+                for x in self.listaContinue:
+                    padre.expresion += str(x)+":\n"
+                self.listaContinue=[]
+                padre.expresion += str(saltoFor) + ":\n"
+                padre.expresion += "if("+str(iterador.referencia)+">"+str(tamCad)+"){goto "+str(saltoFinFor)+"}\n"
+                padre.expresion += "\n"
+                padre.expresion += str(tmpPosChar)+" = " + str(iterador.referencia) + " + "+ str(nodoExpresion.referencia)+";\n" 
+                padre.expresion += str(tmpChar)+ " = " + str(self.getArreglo())+"[int("+str(tmpPosChar)+")];\n"
+                padre.expresion += str(self.getArreglo()) + "[int("+str(pos) + ")] = "+str(tmpChar)+";\n"
+                padre.expresion += nodoInstruccion.expresion
+                padre.expresion += "\n"
+                
+                padre.expresion += str(iterador.referencia) + " = " + str(iterador.referencia)+" + 1;\n"
+                padre.expresion += "goto " +str(saltoFor)+";\n"
+                padre.expresion += str(saltoFinFor) + ":\n"
+        else:
+            # Rangos
+            atr = tablaSimbolos.findSymbol(iterador.texto)
+            if atr!= None:
+                pos = atr.posicion
+                padre.expresion += iterador.expresion
+                etqTmp = self.getTemp()
+                saltoFor = self.getLabel()
+                saltoFinFor = self.getLabel()
+                tamCad = self.getTemp()
+                tmpChar  = self.getTemp()
+                tmpPosChar = self.getTemp()
+                padre.expresion += nodoExpresion.expresion
+                padre.expresion += nodoExpresion2.expresion
+                padre.expresion += str(iterador.referencia) + " = " + str(nodoExpresion.referencia)+";\n"
+                for x in self.listaContinue:
+                    padre.expresion += str(x)+":\n"
+                self.listaContinue=[]
+                padre.expresion += str(saltoFor) + ":\n"
+                padre.expresion += "if("+str(iterador.referencia)+">"+str(nodoExpresion2.referencia)+"){goto "+str(saltoFinFor)+"}\n"
+                padre.expresion += "\n"
+                padre.expresion += str(self.getArreglo()) + "[int("+str(pos) + ")] = "+str(iterador.referencia)+";\n"
+                padre.expresion += nodoInstruccion.expresion
+                padre.expresion += "\n"
+                
+                padre.expresion += str(iterador.referencia) + " = " + str(iterador.referencia)+" + 1;\n"
+                padre.expresion += "goto " +str(saltoFor)+";\n"
+                padre.expresion += str(saltoFinFor) + ":\n"
     #endregion
 
     #endregion

@@ -51,6 +51,8 @@ class InstruccionWhile(Nodo):
         self.etContinue = self.hijos[2].etContinue
         C3DAux().traducirWhile(self.hijos[1], self.hijos[2], self)
         if(self.isBreak):
-            self.expresion += str(self.etBreak)+":\n"
+            for x in C3DAux().listaBreak:
+                self.expresion += str(x)+":\n"
+        C3DAux().listaBreak = []
         symbolTable.eliminarEntorno()
         

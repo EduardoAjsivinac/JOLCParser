@@ -369,6 +369,8 @@ def TypeChecker(op, enviroment, firstnode, secondnode):
     # Se crea la matriz de validaciones
     firstType = firstnode.tipo
     secondType = secondnode.tipo
+    if firstType == DataType.generic and secondType == DataType.generic or firstType == None or secondType == None:
+        return DataType.generic
 
     tipo = matrizchecker.get(op,merror).get(firstType,merror).get(secondType,merror.get(DataType.error))
     if (tipo!= DataType.error):
@@ -388,6 +390,8 @@ def TypeCheckerC3DTable(op, tablaSimbolos, firstnode, secondnode):
     # Se crea la matriz de validaciones
     firstType = firstnode.tipo
     secondType = secondnode.tipo
+    if firstType == DataType.generic and secondType == DataType.generic or firstType == None or secondType == None:
+        return DataType.generic
     tipo = matrizchecker.get(op,merror).get(firstType,merror).get(secondType,merror.get(DataType.error))
     if (tipo!= DataType.error):
         return tipo

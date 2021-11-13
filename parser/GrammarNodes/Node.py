@@ -25,9 +25,9 @@ class Nodo(metaclass=ABCMeta):
         self.size = 1
         self.ev = []
         self.ef = []
-        self.etBreak = ""
-        self.etReturn = ""
-        self.etContinue = ""
+        self.etBreak = []
+        self.etReturn = []
+        self.etContinue = []
 
     def getid(self):
         return str(self.id_nodo)

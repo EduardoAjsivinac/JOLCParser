@@ -40,13 +40,19 @@ class InstruccionLlamadaFuncion(Nodo):
         pass
     
     def getC3D(self,symbolTable):
+
+
+        self.tipo = DataType.generic
         self.hijos[0].getC3D(symbolTable)
-        if (self.hijos[0].size == 1):
-            # self.expresion+="sp=sp+0;\n" #Descomentar cuando vengan parametros
-            atr = symbolTable.findSymbol(self.hijos[0].texto)
-            print(atr.tam)
-            self.referencia = C3DAux().getTemp()
-            self.expresion += str(self.referencia) + " = stack[int(sp)];\n"
-            self.expresion+=self.hijos[0].texto+"();\n"
-        else:
-            print(self.hijos[0].size)
+        func = symbolTable.findSymbol(self.hijos[0].texto)
+        if func != None:
+            if(self.hijos[0].size == 1):# Posicion se utilizó como numero de parametros
+                
+                tmpEtq = C3DAux().getTemp()
+                self.expresion += "sp = sp + "+str(C3DAux().obtenerUltima())+"\n"
+                self.expresion += str(tmpEtq)+" = sp;\n"
+                
+                self.expresion += str(self.hijos[0].texto) + "();\n"
+                self.referencia = C3DAux().getTemp()
+                self.expresion += str(self.referencia) + " = stack[int(sp)];\n"
+                self.expresion += "sp = sp - "+str(C3DAux().obtenerUltima())+"\n"

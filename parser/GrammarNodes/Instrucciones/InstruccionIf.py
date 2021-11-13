@@ -42,7 +42,6 @@ class InstruccionIf(Nodo):
         self.hijos[1].getC3D(symbolTable) # expresion
         symbolTable.agregarEntorno("if")
         self.hijos[2].getC3D(symbolTable)
-        print(self.hijos[2].expresion)
         C3DAux().traducirIfs(self.hijos[1], self.hijos[2], self)
         if len(self.hijos)==5 : #existe un else o un else if
             symbolTable.eliminarEntorno()
@@ -52,26 +51,26 @@ class InstruccionIf(Nodo):
             
             if self.hijos[3].isReturn :
                 self.isReturn = True
-                self.etReturn = self.hijos[3].etReturn
+                self.etReturn += self.hijos[3].etReturn
             if self.hijos[3].isContinue :
                 self.isContinue = True
-                self.etContinue = self.hijos[3].etContinue
+                self.etContinue += self.hijos[3].etContinue
             if self.hijos[3].isBreak :
                 self.isBreak = True
-                self.etBreak = self.hijos[3].etBreak
+                self.etBreak += self.hijos[3].etBreak
             
         for x in self.ev:
             self.expresion += str(x) + ":\n" # Si se cumple la condición del primer if
 
         if self.hijos[2].isReturn :
             self.isReturn = True
-            self.etReturn = self.hijos[2].etReturn
+            self.etReturn +=self.hijos[2].etReturn
         if self.hijos[2].isContinue :
             self.isContinue = True
-            self.etContinue = self.hijos[2].etContinue
+            self.etContinue += self.hijos[2].etContinue
         if self.hijos[2].isBreak :
             self.isBreak = True
-            self.etBreak = self.hijos[2].etBreak
+            self.etBreak += self.hijos[2].etBreak
         
         
         

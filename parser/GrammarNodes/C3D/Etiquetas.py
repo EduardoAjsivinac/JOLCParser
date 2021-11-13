@@ -11,6 +11,14 @@ class C3DAux(object):
     librerias = {}
     expresionFunciones = ""
     listaTamEntornos = []
+    listaReturns = []
+    listaContinue = []
+    listaBreak = []
+
+    def limpiarArreglos(self):
+        self.listaReturns = []
+        self.listaContinue = []
+        self.listaBreak = []
     
     def agregarATam(self,tam):
         self.listaTamEntornos.append(tam)
@@ -398,8 +406,9 @@ class C3DAux(object):
             padre.expresion += str(etemp)+":\n"
             
             self.agregarIfEtiquetas(nodoExpresion)
-            if (padre.isContinue):
-                padre.expresion += str(padre.etContinue)+":\n"
+            for x in self.listaContinue:
+                padre.expresion += str(x)+":\n"
+            self.listaContinue=[]
             padre.expresion += nodoExpresion.expresion
             for x in nodoExpresion.ev:
                 padre.expresion += str(x) + ":\n"
@@ -424,6 +433,8 @@ class C3DAux(object):
                             padre.expresion +='''fmt.Printf(\"%g\",'''+str(nodoExp.referencia)+''');\n'''
                         elif (nodoExp.tipo == DataType.generic):
                             padre.expresion +='''fmt.Printf(\"%g\",'''+str(nodoExp.referencia)+''');\n'''
+                        else:
+                            isPrintln = False
                         
                     else:
                         tmpRef1 = self.getTemp()

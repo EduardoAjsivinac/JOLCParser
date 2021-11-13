@@ -37,6 +37,8 @@ class InstruccionCrearFuncion(Nodo):
         txt += "t0 = sp;\n"
         txt += self.hijos[4].expresion
         if (self.hijos[4].isReturn):
-            txt+=str(self.hijos[4].etReturn)+":\n"
+            for x in C3DAux().listaReturns:
+                txt+=str(x)+":\n"
+        C3DAux().listaReturns = []
         txt += "}\n"
         C3DAux().agregarExpresionFunciones(txt)

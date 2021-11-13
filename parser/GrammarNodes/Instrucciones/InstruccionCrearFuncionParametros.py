@@ -57,16 +57,21 @@ class InstruccionCrearFuncionParametros(Nodo):
 
     def getC3D(self,symbolTable):
         C3DAux().changeArreglo()
+        atr = symbolTable.findSymbol(self.hijos[1].texto)
+        if atr != None:
+            C3DAux().agregarATam(atr.tam+1)
         symbolTable.agregarEntorno("funcion")
         self.hijos[5].getC3D(symbolTable)
         symbolTable.eliminarEntorno()
         C3DAux().changeArreglo()
-        print(self.hijos[5].expresion)
         txt = "func "+self.hijos[1].texto+"(){\n"
         txt += "t0 = sp;\n"
         txt += "t1 = sp;\n"
         txt += self.hijos[5].expresion
-        if (self.hijos[5].isReturn):
-            txt+=str(self.hijos[5].etReturn)+":\n"
+        for x in C3DAux().listaReturns:
+            txt+=str(x)+":\n"
         txt += "}\n"
+        C3DAux().listaReturns = []
         C3DAux().agregarExpresionFunciones(txt)
+        if atr != None:
+            C3DAux().eliminarTam()

@@ -16,5 +16,7 @@ class InstruccionReturn(Nodo):
     def getC3D(self,symbolTable):
         self.isReturn = True
         self.tipo = DataType.nothing
-        self.etReturn = C3DAux().getLabel()
-        self.expresion += "goto "+str(self.etReturn) + "\n"
+        tmp = C3DAux().getLabel()
+        self.etReturn.append(tmp)
+        self.expresion += "goto "+str(tmp) + "\n"
+        C3DAux().listaReturns.append(tmp)

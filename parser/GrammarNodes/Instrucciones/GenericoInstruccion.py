@@ -59,7 +59,7 @@ class GenericoInstruccion(Nodo):
                     self.isReturn = True
                     self.tipo = x.tipo
                     self.valor = x.valor
-                    self.etReturn = x.etReturn
+                    self.etReturn += x.etReturn
                     
                     
             if(x.isBreak):
@@ -67,7 +67,7 @@ class GenericoInstruccion(Nodo):
                     self.isBreak = True
                     self.tipo = x.tipo
                     self.valor = x.valor
-                    self.etBreak = x.etBreak
+                    self.etBreak+=x.etBreak
                     
                 else:
                     descripcion = "La instruccion break se debe definir dentro de una funcion"
@@ -77,7 +77,7 @@ class GenericoInstruccion(Nodo):
                     self.isContinue = True
                     self.tipo = x.tipo
                     self.valor = x.valor
-                    self.etContinue = x.etContinue
+                    self.etContinue += x.etContinue
                     
                 else:
                     descripcion = "La instruccion continue se debe definir dentro de una funcion"

@@ -20,8 +20,11 @@ class InstruccionReturnValor(Nodo):
 
     def getC3D(self,symbolTable):
         self.isReturn = True
-        self.tipo = DataType.nothing
+        self.tipo = DataType.generic
         self.hijos[1].getC3D(symbolTable)
-        self.etReturn = C3DAux().getLabel()
+        tmpRet = C3DAux().getLabel()
+        self.etReturn += tmpRet
+        self.expresion += self.hijos[1].expresion
         self.expresion += "stack[int(sp)] = " + str( self.hijos[1].referencia) + "\n"
-        self.expresion += "goto "+str(self.etReturn) + "\n"
+        self.expresion += "goto "+str(tmpRet) + "\n"
+        C3DAux().listaReturns.append(tmpRet)

@@ -17,5 +17,7 @@ class InstruccionContinue(Nodo):
     def getC3D(self,symbolTable):
         self.isContinue = True
         self.tipo = DataType.nothing
-        self.etContinue = C3DAux().getLabel()
-        self.expresion += "goto "+str(self.etContinue) + "\n"
+        tmp = C3DAux().getLabel()
+        self.etContinue.append(tmp)
+        self.expresion += "goto "+str(tmp) + "\n"
+        C3DAux().listaContinue.append(tmp)

@@ -107,6 +107,7 @@ def translate():
         C3DAux().expresionFunciones = ""
         C3DAux().getTemp() # T0 para los return
         C3DAux().getTemp() # T1 para los sp
+        C3DAux().limpiarArreglos()
         resultado['raiz'].getC3D(tablaSimbolos)
         resultado['raiz'].expresion += "}\n"
         consolaSalida = crearC3D(resultado['raiz'].expresion,tablaSimbolos)

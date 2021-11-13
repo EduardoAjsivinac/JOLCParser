@@ -17,5 +17,7 @@ class InstruccionBreak(Nodo):
     def getC3D(self,symbolTable):
         self.isBreak = True
         self.tipo = DataType.nothing
-        self.etBreak = C3DAux().getLabel()
-        self.expresion += "goto "+str(self.etBreak) + "\n"
+        tmp =C3DAux().getLabel()
+        self.etBreak.append(tmp)
+        self.expresion += "goto "+str(tmp) + "\n"
+        C3DAux().listaBreak.append(tmp)

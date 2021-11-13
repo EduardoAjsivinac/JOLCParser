@@ -1,6 +1,7 @@
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
 from copy import deepcopy
+from ..C3D import C3DAux
 
 class InstruccionForRango(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna = -1):
@@ -30,7 +31,22 @@ class InstruccionForRango(Nodo):
         enviroment.actualizarValoresEntorno(nuevoEntorno)
 
     def createTable(self, simbolTable):
-        pass
+        simbolTable.agregarEntorno("for")
+        self.hijos[1].createTable(simbolTable)
+        simbolTable.insertSymbolEntity(self.hijos[1].texto, DataType.int64, 1)
+        self.hijos[6].createTable(simbolTable)
+        simbolTable.eliminarEntorno()
 
     def getC3D(self,symbolTable):
-        pass
+        symbolTable.agregarEntorno("for")
+        self.hijos[1].getC3D(symbolTable) # expresion
+        self.hijos[3].getC3D(symbolTable)
+        self.hijos[5].getC3D(symbolTable)
+        self.hijos[6].getC3D(symbolTable)
+        C3DAux().traducirFor(self.hijos[1], self.hijos[3],self.hijos[6], symbolTable, self,self.hijos[5])
+        if(self.isBreak):
+            for x in C3DAux().listaBreak:
+                self.expresion += str(x)+":\n"
+        C3DAux().listaBreak = []
+        symbolTable.eliminarEntorno()
+        

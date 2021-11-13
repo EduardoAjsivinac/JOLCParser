@@ -1,6 +1,7 @@
 from parser.GrammarNodes.Tipo.DataType import DataType, TypeChecker
 from ..Node import Nodo
 from copy import deepcopy
+from ..C3D import C3DAux
 
 class InstruccionForCadena(Nodo):
     def __init__(self, valor, id_nodo, texto, fila = -1, columna = -1):
@@ -48,7 +49,20 @@ class InstruccionForCadena(Nodo):
         enviroment.actualizarValoresEntorno(nuevoEntorno)
 
     def createTable(self, simbolTable):
-        pass
+        simbolTable.agregarEntorno("for")
+        self.hijos[1].createTable(simbolTable)
+        simbolTable.insertSymbolEntity(self.hijos[1].texto, DataType.char, 1)
+        self.hijos[4].createTable(simbolTable)
+        simbolTable.eliminarEntorno()
 
     def getC3D(self,symbolTable):
-        pass
+        symbolTable.agregarEntorno("for")
+        self.hijos[1].getC3D(symbolTable) # expresion
+        self.hijos[3].getC3D(symbolTable)
+        self.hijos[4].getC3D(symbolTable)
+        C3DAux().traducirFor(self.hijos[1], self.hijos[3],self.hijos[4], symbolTable, self)
+        if(self.isBreak):
+            for x in C3DAux().listaBreak:
+                self.expresion += str(x)+":\n"
+        C3DAux().listaBreak = []
+        symbolTable.eliminarEntorno()
